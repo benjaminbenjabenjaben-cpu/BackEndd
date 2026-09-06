@@ -1,0 +1,258 @@
+[
+  {
+    "codigo": "MP-2026-001",
+    "estado": "camino",
+    "destinatario": "Sucursal del Rock",
+    "destino": "Av. Providencia 1988, Santiago",
+    "equipo": "Guitarras Fender + amplificadores",
+    "bultos": 8,
+    "peso": 124.5,
+    "prioridad": "alta",
+    "conductor": "Camila Torres",
+    "patente": "LX-TR-42",
+    "eta": "Hoy, 16:30–17:30",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "cliente@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      },
+      {
+        "estado": "camino",
+        "titulo": "En ruta al destino",
+        "nota": "El vehículo continúa su recorrido programado.",
+        "fecha": "2026-09-05T11:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-002",
+    "estado": "bodega",
+    "destinatario": "Sucursal del DJ",
+    "destino": "Av. Vicuña Mackenna 840, Santiago",
+    "equipo": "Consolas Pioneer DJ",
+    "bultos": 4,
+    "peso": 68,
+    "prioridad": "normal",
+    "conductor": "Por asignar",
+    "patente": "Sin asignar",
+    "eta": "Hoy, 18:00–19:00",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "sucursal@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-003",
+    "estado": "enviado",
+    "destinatario": "Estadio Nacional",
+    "destino": "Av. Grecia 2001, Ñuñoa",
+    "equipo": "Sistema de sonido JBL",
+    "bultos": 12,
+    "peso": 480,
+    "prioridad": "alta",
+    "conductor": "Diego Rojas",
+    "patente": "KD-PW-18",
+    "eta": "Hoy, 17:00–18:00",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "cliente@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-004",
+    "estado": "recibido",
+    "destinatario": "Sucursal Cumbia",
+    "destino": "Gran Avenida 5200, San Miguel",
+    "equipo": "Percusión y teclados Yamaha",
+    "bultos": 6,
+    "peso": 92,
+    "prioridad": "normal",
+    "conductor": "Valentina Soto",
+    "patente": "PB-FG-65",
+    "eta": "Entregado",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "sucursal@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      },
+      {
+        "estado": "camino",
+        "titulo": "En ruta al destino",
+        "nota": "El vehículo continúa su recorrido programado.",
+        "fecha": "2026-09-05T11:00:00-04:00"
+      },
+      {
+        "estado": "recibido",
+        "titulo": "Entrega completada",
+        "nota": "Recepción de la carga confirmada en destino.",
+        "fecha": "2026-09-05T12:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-005",
+    "estado": "camino",
+    "destinatario": "Teatro Municipal",
+    "destino": "Agustinas 794, Santiago",
+    "equipo": "Monitores de escenario",
+    "bultos": 5,
+    "peso": 85,
+    "prioridad": "normal",
+    "conductor": "Diego Rojas",
+    "patente": "KD-PW-18",
+    "eta": "Hoy, 16:00–17:00",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "cliente@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      },
+      {
+        "estado": "camino",
+        "titulo": "En ruta al destino",
+        "nota": "El vehículo continúa su recorrido programado.",
+        "fecha": "2026-09-05T11:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-006",
+    "estado": "bodega",
+    "destinatario": "Sucursal Providencia",
+    "destino": "Av. Nueva Providencia 2155, Santiago",
+    "equipo": "Micrófonos Shure SM58",
+    "bultos": 3,
+    "peso": 12.6,
+    "prioridad": "alta",
+    "conductor": "Por asignar",
+    "patente": "Sin asignar",
+    "eta": "Mañana, 09:00–10:00",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "sucursal@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-007",
+    "estado": "recibido",
+    "destinatario": "Sala de Ensayo Norte",
+    "destino": "Av. Independencia 1500, Santiago",
+    "equipo": "Batería acústica Pearl",
+    "bultos": 7,
+    "peso": 110,
+    "prioridad": "normal",
+    "conductor": "Valentina Soto",
+    "patente": "PB-FG-65",
+    "eta": "Entregado",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "cliente@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      },
+      {
+        "estado": "camino",
+        "titulo": "En ruta al destino",
+        "nota": "El vehículo continúa su recorrido programado.",
+        "fecha": "2026-09-05T11:00:00-04:00"
+      },
+      {
+        "estado": "recibido",
+        "titulo": "Entrega completada",
+        "nota": "Recepción de la carga confirmada en destino.",
+        "fecha": "2026-09-05T12:00:00-04:00"
+      }
+    ]
+  },
+  {
+    "codigo": "MP-2026-008",
+    "estado": "enviado",
+    "destinatario": "Sucursal del Rock",
+    "destino": "Av. Providencia 1988, Santiago",
+    "equipo": "Bajos eléctricos Ibanez",
+    "bultos": 4,
+    "peso": 34,
+    "prioridad": "normal",
+    "conductor": "Camila Torres",
+    "patente": "LX-TR-42",
+    "eta": "Hoy, 18:00–19:00",
+    "origen": "Bodega Central · Quilicura",
+    "cliente": "sucursal@musicpro.test",
+    "historial": [
+      {
+        "estado": "bodega",
+        "titulo": "Preparación en bodega",
+        "nota": "Carga revisada y preparada para despacho.",
+        "fecha": "2026-09-05T09:00:00-04:00"
+      },
+      {
+        "estado": "enviado",
+        "titulo": "Despacho confirmado",
+        "nota": "Carga entregada al equipo de transporte.",
+        "fecha": "2026-09-05T10:00:00-04:00"
+      }
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Rastrear envío | Music Pro Courier{% endblock %}
+{% block contenido %}
+<section class="narrow-page"><div class="eyebrow">CADA ETAPA, A TU ALCANCE</div><h1>Sigue tu envío</h1><p class="muted">Consulta su estado sin iniciar sesión. Accede a tu cuenta para ver el detalle completo.</p><div class="panel-card"><form method="get">{% include 'core/campos_formulario.html' %}<button class="btn btn-primary w-100" type="submit">Rastrear envío →</button></form><p class="example-code">Código de ejemplo: <a href="{% url 'core:detalle_envio' 'MP-2026-001' %}">MP-2026-001</a></p></div></section>
+{% endblock %}

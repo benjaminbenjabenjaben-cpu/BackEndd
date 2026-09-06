@@ -1,0 +1,11 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+staticfiles/
+.tools/
+*.log
+artifacts/
+entrega_music_pro_u1.zip

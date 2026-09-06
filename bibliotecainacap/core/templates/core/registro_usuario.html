@@ -1,0 +1,5 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Crear cuenta | Music Pro Courier{% endblock %}
+{% block contenido %}
+<div class="registration-layout"><section class="registration-intro"><div class="eyebrow">SÚMATE AL RECORRIDO</div><h1>Tus equipos.<br>Tus envíos.<br><span>Todo conectado.</span></h1><p>Un espacio para seguir cada despacho y tener la información que necesitas, cuando la necesitas.</p><div class="info-strip">01 &nbsp; Crea tu cuenta<br>02 &nbsp; Inicia sesión<br>03 &nbsp; Consulta tus envíos</div><a href="{% url 'core:inicio' %}" class="text-link">← Volver al inicio</a></section><section class="panel-card"><h2>Crea tu cuenta</h2><p class="muted">Registro de cliente · Demostración de 2 horas.</p><form method="post">{% csrf_token %}{% include 'core/campos_formulario.html' %}<button class="btn btn-primary w-100" type="submit">Crear cuenta <span aria-hidden="true">→</span></button></form><p class="register-link">¿Ya tienes cuenta? <a href="{% url 'core:inicio' %}">Inicia sesión</a></p></section></div>
+{% endblock %}

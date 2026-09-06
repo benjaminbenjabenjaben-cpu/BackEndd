@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Acceso y rastreo | Music Pro Courier{% endblock %}
+{% block contenido %}
+<section class="hero-public">
+  <div class="eyebrow"><span class="tag">MUSIC PRO TOUR 2026</span> DE LA BODEGA AL ESCENARIO</div>
+  <h1>La música no se detiene.<br><span>Tu logística tampoco.</span></h1>
+  <p>Todo tu equipo, siempre en el radar. Gestiona tus despachos y sigue cada etapa del viaje en un solo lugar.</p>
+</section>
+<div class="access-grid">
+  <section class="tracking-column">
+    <div class="panel-card tracking-card">
+      <div class="section-heading"><span class="icon-box" aria-hidden="true">◎</span><div><h2>¿Dónde está tu envío?</h2><p>Sigue su recorrido con tu código de seguimiento.</p></div></div>
+      <form action="{% url 'core:rastreo' %}" method="get" class="tracking-form"><div><label class="form-label" for="id_codigo">Código de seguimiento</label>{{ rastreo_form.codigo }}</div><button class="btn btn-primary" type="submit">Rastrear envío <span aria-hidden="true">→</span></button></form>
+      <p class="example-code">Prueba con <a href="{% url 'core:detalle_envio' 'MP-2026-001' %}">MP-2026-001</a> o <a href="{% url 'core:detalle_envio' 'MP-2026-004' %}">MP-2026-004</a></p>
+      <div class="journey-illustration" aria-label="Etapas del envío"><div><span>01</span><b>En bodega</b><small>Preparado con cuidado</small></div><i></i><div><span>02</span><b>Enviado</b><small>Despacho confirmado</small></div><i></i><div><span>03</span><b>En camino</b><small>Cada vez más cerca</small></div><i></i><div><span>04</span><b>Recibido</b><small>Listo para sonar</small></div></div>
+    </div>
+    <div class="feature-grid"><article><span aria-hidden="true">↗</span><h3>Un solo lugar</h3><p>Consulta tus despachos de forma simple y ordenada.</p></article><article><span aria-hidden="true">◷</span><h3>Cada etapa cuenta</h3><p>Revisa el estado y el historial de tus equipos.</p></article><article><span aria-hidden="true">◇</span><h3>Hecho para la música</h3><p>Instrumentos y audio profesional, de origen a destino.</p></article></div>
+  </section>
+  <section class="panel-card login-card">
+    <div class="eyebrow">TU CENTRO DE OPERACIONES</div><h2>Bienvenido de vuelta</h2><p class="muted">Ingresa para gestionar y consultar tus envíos.</p>
+    <form method="post" action="{% url 'core:inicio' %}">{% csrf_token %}{% include 'core/campos_formulario.html' %}<button class="btn btn-primary w-100" type="submit">Ingresar al portal <span aria-hidden="true">→</span></button></form>
+    <p class="register-link">¿Primera vez aquí? <a href="{% url 'core:registro' %}">Crea tu cuenta</a></p>
+    <details class="demo-credentials"><summary>Credenciales de demostración</summary><p><b>Operaciones:</b> admin@musicpro.test<br><b>Cliente:</b> cliente@musicpro.test<br><b>Contraseña:</b> <code>MusicPro2026!</code></p><p>Sesiones temporales. Usa únicamente datos ficticios.</p></details>
+  </section>
+</div>
+{% endblock %}
