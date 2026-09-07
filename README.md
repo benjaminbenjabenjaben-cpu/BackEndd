@@ -1,8 +1,8 @@
 # Music Pro Courier · Prototipo U1
 
-Portal académico de Transporte y Despachos, construido con Django, HTML semántico, Bootstrap y CSS propio. Conserva el diseño del portal y presenta ocho envíos ficticios leídos desde un archivo JSON.
+Portal  de Transporte y Despachos, construido con Django, HTML semántico, Bootstrap y CSS propio. Conserva el diseño del portal y presenta ocho envíos ficticios leídos desde un archivo JSON.
 
-La versión actual se ajusta a la corrección solicitada para la presentación: **sin modelos, Django Forms, base de datos, autenticación, sesiones ni plantillas heredadas o parciales**. Cada página contiene su documento HTML completo.
+
 
 ## Iniciar en este computador
 
@@ -12,7 +12,7 @@ Abre la terminal de Visual Studio Code en la carpeta del proyecto y ejecuta:
 .\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000 --noreload
 ```
 
-Abre **http://127.0.0.1:8000/**. Mantén abierta la terminal; `Ctrl+C` detiene el servidor. No hace falta activar el entorno porque el comando usa directamente su Python. Si modificas Python, detén y vuelve a iniciar el servidor.
+Abre **http://127.0.0.1:8000/**. Mantén abierta la terminal; `Ctrl+C` detiene el servidor.Si modificas Python, detén y vuelve a iniciar el servidor.
 
 Para instalar en otro equipo con Python 3.12 o superior:
 
