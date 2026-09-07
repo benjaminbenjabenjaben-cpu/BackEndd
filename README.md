@@ -22,9 +22,9 @@ python -m venv venv
 .\venv\Scripts\python.exe bibliotecainacap\manage.py runserver
 ```
 
-No se necesita ejecutar migraciones ni crear un superusuario. Las plantillas se abren a través del servidor Django.
 
-## Recorrido para la evaluación
+Explicacion
+
 
 1. Abre el inicio y presiona **Ingresar al portal**. Puedes dejar los campos vacíos: son visuales y no se validan credenciales.
 2. En el panel muestra los cuatro contadores, la tabla, los filtros y la segunda página de resultados.
