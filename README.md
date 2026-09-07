@@ -36,46 +36,7 @@ No se necesita ejecutar migraciones ni crear un superusuario. Las plantillas se 
 
 El registro también es visual: envía un formulario y muestra una confirmación, pero no crea cuentas. Las fechas, personas y direcciones son ficticias; no hay GPS ni integración con entregas reales.
 
-## Cómo explicar el backend
 
-> El navegador solicita una dirección. Django busca esa ruta en urls.py y ejecuta una función de views.py. La función obtiene los datos de ejemplo del JSON, prepara un diccionario llamado contexto y usa render para generar la página HTML. El navegador recibe el HTML terminado.
-
-```mermaid
-flowchart LR
-    N[Navegador] --> U[urls.py]
-    U --> V[Función en views.py]
-    J[envios.json] --> S[services.py: listas y diccionarios]
-    S --> V
-    V --> C[Contexto]
-    C --> T[HTML independiente]
-    T --> R[Respuesta al navegador]
-```
-
-| Archivo o función | Qué explicar |
-|---|---|
-| `core/urls.py` | Relaciona direcciones como `/panel/` con funciones de las vistas. |
-| `inicio` | GET muestra el acceso visual. POST redirige al panel sin comprobar correo ni contraseña. |
-| `registro` | Muestra un formulario HTML y una confirmación de ejemplo al recibir POST. |
-| `panel` | Lee los ocho envíos, aplica filtros, calcula contadores y pagina los resultados de seis en seis. |
-| `rastreo` | Obtiene el código de GET, elimina espacios, convierte a mayúsculas y busca el envío. |
-| `detalle_envio` | Busca un envío y devuelve su HTML; responde con estado 404 si no existe. |
-| `mostrar_detalle` | Prepara las cuatro etapas del recorrido y el contexto del detalle. Es una función Python auxiliar. |
-| `nuevo_envio` | Lee campos de POST, comprueba los datos de carga con Python y muestra una vista previa sin guardarla. |
-| `actualizar_estado` | Prepara la siguiente etapa e historial para una vista previa sin modificar el JSON. |
-| `exportar_envios` | Devuelve los ejemplos filtrados mediante `JsonResponse` como archivo descargable. |
-| `ayuda` | Genera la página con instrucciones del portal. |
-| `salir` | Conserva la ruta anterior: redirige al inicio; no hay una sesión que cerrar. |
-| `services.cargar_envios` | Abre `data/envios.json` en modo lectura y lo convierte en una lista de diccionarios. |
-| `services.preparar_envio` | Calcula etiquetas, porcentaje y fechas para la presentación. |
-| `services.filtrar_envios` | Selecciona elementos de la lista según texto y estado. |
-
-**GET** se usa para consultar y filtrar. **POST** recibe los campos enviados desde un formulario. `render` devuelve HTML y `redirect` lleva al navegador a otra dirección.
-
-Los formularios usan etiquetas `<form>`, `<label>`, `<input>`, `<select>` y `<textarea>` escritas directamente en cada HTML. No existe `forms.py`, ni clases `forms.Form`, ni `ModelForm`. Las comprobaciones simples de bultos y peso evitan errores de conversión; el acceso no valida usuarios. `{% csrf_token %}` protege el envío de formularios y no es una validación de inicio de sesión.
-
-Las plantillas tienen `header`, `nav`, `main`, `section` y `footer`. Usan variables `{{ ... }}`, condiciones `{% if %}` y ciclos `{% for %}` para mostrar el contexto. No usan `extends`, `include` ni `block`. Los CSS y JavaScript siguen siendo archivos estáticos comunes.
-
-El `include` de `bibliotecainacap/urls.py` solamente conecta las rutas de la aplicación: no incluye fragmentos HTML ni implementa herencia de plantillas.
 
 **Framework CSS de esta versión:** Bootstrap local, junto a `portal.css`. La versión actual no carga Tailwind. Se conserva este diseño en la corrección.
 
@@ -118,6 +79,4 @@ bibliotecainacap/
 .\venv\Scripts\python.exe bibliotecainacap\manage.py test core
 ```
 
-Las 14 pruebas comprueban navegación sin cuentas, acceso visual, filtros, paginación, rastreo, detalle, vistas previas sin modificar el JSON, exportación, escape del texto y protección CSRF. Usan `SimpleTestCase`, que impide consultas a una base de datos.
 
-Para mostrar avances al profesor, abre el historial **Commits** de [este repositorio](https://github.com/benjaminbenjabenjaben-cpu/BackEndd). El historial conserva la implementación inicial y registra la simplificación y actualización de esta guía como cambios posteriores reales. Cada nuevo avance debe registrarse después de realizarlo y comprobarlo; no se alteran fechas ni se reconstruye un historial ficticio.
