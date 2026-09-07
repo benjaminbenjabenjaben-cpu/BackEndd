@@ -1,3 +1,0 @@
-{% extends 'core/base.html' %}
-{% block titulo %}{{ titulo }} | Music Pro Courier{% endblock %}
-{% block contenido %}<section class="narrow-page wide"><div class="eyebrow">OPERACIONES MUSIC PRO</div><h1>{{ titulo }}</h1><p class="muted">{{ subtitulo }}</p><div class="panel-card"><form method="post">{% csrf_token %}{% include 'core/campos_formulario.html' %}<div class="form-actions"><button class="btn btn-primary" type="submit">{{ boton }} →</button><a href="{% url 'core:panel' %}" class="btn btn-secondary">Cancelar</a></div></form></div><p class="session-notice">Los cambios se conservan solo durante esta sesión de demostración.</p></section>{% endblock %}

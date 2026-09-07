@@ -1,5 +1,107 @@
-{% extends 'core/base.html' %}
-{% block titulo %}Crear cuenta | Music Pro Courier{% endblock %}
-{% block contenido %}
-<div class="registration-layout"><section class="registration-intro"><div class="eyebrow">SÚMATE AL RECORRIDO</div><h1>Tus equipos.<br>Tus envíos.<br><span>Todo conectado.</span></h1><p>Un espacio para seguir cada despacho y tener la información que necesitas, cuando la necesitas.</p><div class="info-strip">01 &nbsp; Crea tu cuenta<br>02 &nbsp; Inicia sesión<br>03 &nbsp; Consulta tus envíos</div><a href="{% url 'core:inicio' %}" class="text-link">← Volver al inicio</a></section><section class="panel-card"><h2>Crea tu cuenta</h2><p class="muted">Registro de cliente · Demostración de 2 horas.</p><form method="post">{% csrf_token %}{% include 'core/campos_formulario.html' %}<button class="btn btn-primary w-100" type="submit">Crear cuenta <span aria-hidden="true">→</span></button></form><p class="register-link">¿Ya tienes cuenta? <a href="{% url 'core:inicio' %}">Inicia sesión</a></p></section></div>
-{% endblock %}
+{% load static %}
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Music Pro Courier. Gestión de despachos y seguimiento de instrumentos musicales.">
+<title>Registro de ejemplo | Music Pro Courier</title>
+<link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'core/portal.css' %}">
+<script src="{% static 'core/portal.js' %}" defer>
+</script>
+</head>
+<body class=" {% if mostrar_menu %} con-panel {% else %} publico {% endif %} ">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+<a class="marca" href="{% url 'core:inicio' %}" aria-label="Music Pro Courier, inicio">
+<span class="marca-icono" aria-hidden="true">♫</span>
+<span>MUSIC PRO <b>COURIER</b>
+<small>TOUR 2026 · LOGÍSTICA & DESPACHO</small>
+</span>
+</a>
+<nav class="topnav" aria-label="Navegación principal">
+{% if mostrar_menu %}
+<a href="{% url 'core:panel' %}" {% if pagina == 'panel' %} aria-current="page" {% endif %} >Panel de envíos</a>
+{% endif %}
+    <a href="{% url 'core:rastreo' %}" {% if pagina == 'rastreo' %} aria-current="page" {% endif %} >Rastrear envío</a>
+<a href="{% url 'core:ayuda' %}" {% if pagina == 'ayuda' %} aria-current="page" {% endif %} >Ayuda</a>
+</nav>
+<div class="top-user">
+<span class="demo-indicator">
+<i>
+</i> Demo interactiva</span>
+{% if mostrar_menu %}
+<a class="btn btn-sm btn-quiet" href="{% url 'core:inicio' %}">Volver al inicio</a>
+{% endif %}
+  </div>
+</header>
+{% if mostrar_menu %}
+<aside class="sidebar">
+<div class="sidebar-label">CENTRO DE OPERACIONES</div>
+<a href="{% url 'core:panel' %}" class="side-link {% if pagina == 'panel' %} active {% endif %} ">
+<span aria-hidden="true">▦</span> Panel de envíos</a>
+{% if mostrar_menu %}
+<a href="{% url 'core:nuevo_envio' %}" class="side-link {% if pagina == 'nuevo' %} active {% endif %} ">
+<span aria-hidden="true">＋</span> Nuevo envío</a>
+{% endif %}
+  <a href="{% url 'core:rastreo' %}" class="side-link {% if pagina == 'rastreo' %} active {% endif %} ">
+<span aria-hidden="true">◎</span> Seguimiento</a>
+<div class="sidebar-bottom">
+<div class="tour-label">MUSIC PRO TOUR <b>2026</b>
+</div>
+<p>La música se mueve.<br>Nosotros la acompañamos.</p>
+<a href="{% url 'core:ayuda' %}" class="text-link">Guía del portal ↗</a>
+<div class="demo-note">Entorno de demostración<br>Datos de ejemplo · Unidad 1</div>
+</div>
+</aside>
+{% endif %}
+<main id="contenido" class="main-content" tabindex="-1">
+<div class="registration-layout">
+<section class="registration-intro">
+<div class="eyebrow">SÚMATE AL RECORRIDO</div>
+<h1>Tus equipos.<br>Tus envíos.<br>
+<span>Todo conectado.</span>
+</h1>
+<p>Un espacio para seguir cada despacho y tener la información que necesitas, cuando la necesitas.</p>
+<div class="info-strip">01 &nbsp; Explora el portal<br>02 &nbsp; Abre el panel<br>03 &nbsp; Consulta tus envíos</div>
+<a href="{% url 'core:inicio' %}" class="text-link">← Volver al inicio</a>
+</section>
+<section class="panel-card">
+<h2>Registro de ejemplo</h2>
+<p class="muted">Formulario visual. No crea cuentas ni guarda los datos ingresados.</p>
+{% if enviado %}
+<div class="alert alert-info" role="status">Demostración completada. No se creó una cuenta ni se guardaron los datos. <a href="{% url 'core:panel' %}">Abrir el panel</a>
+</div>
+{% endif %}
+<form method="post" novalidate>{% csrf_token %}<div class="campo">
+<label class="form-label" for="id_nombre">Nombre de ejemplo</label>
+<input class="form-control" id="id_nombre" name="nombre" type="text" >
+</div>
+<div class="campo">
+<label class="form-label" for="id_correo">Correo de ejemplo</label>
+<input class="form-control" id="id_correo" name="correo" type="text" >
+</div>
+<div class="campo">
+<label class="form-label" for="id_contrasena">Contraseña de ejemplo</label>
+<input class="form-control" id="id_contrasena" name="contrasena" type="password" >
+</div>
+<div class="campo">
+<label class="form-label" for="id_confirmar">Repetir contraseña de ejemplo</label>
+<input class="form-control" id="id_confirmar" name="confirmar" type="password" >
+</div>
+<button class="btn btn-primary w-100" type="submit">Probar formulario <span aria-hidden="true">→</span>
+</button>
+</form>
+<p class="register-link">¿Ya tienes cuenta? <a href="{% url 'core:inicio' %}">Inicia sesión</a>
+</p>
+</section>
+</div>
+<footer class="page-footer">
+<span>© 2026 Music Pro · Transporte y despachos</span>
+<span>Prototipo académico · Datos ficticios</span>
+</footer>
+</main>
+</body>
+</html>

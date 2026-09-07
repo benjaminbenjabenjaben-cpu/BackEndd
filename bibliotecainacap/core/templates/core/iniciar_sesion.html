@@ -1,26 +1,164 @@
-{% extends 'core/base.html' %}
-{% block titulo %}Acceso y rastreo | Music Pro Courier{% endblock %}
-{% block contenido %}
+{% load static %}
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Music Pro Courier. Gestión de despachos y seguimiento de instrumentos musicales.">
+<title>Acceso y rastreo | Music Pro Courier</title>
+<link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'core/portal.css' %}">
+<script src="{% static 'core/portal.js' %}" defer>
+</script>
+</head>
+<body class=" {% if mostrar_menu %} con-panel {% else %} publico {% endif %} ">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+<a class="marca" href="{% url 'core:inicio' %}" aria-label="Music Pro Courier, inicio">
+<span class="marca-icono" aria-hidden="true">♫</span>
+<span>MUSIC PRO <b>COURIER</b>
+<small>TOUR 2026 · LOGÍSTICA & DESPACHO</small>
+</span>
+</a>
+<nav class="topnav" aria-label="Navegación principal">
+{% if mostrar_menu %}
+<a href="{% url 'core:panel' %}" {% if pagina == 'panel' %} aria-current="page" {% endif %} >Panel de envíos</a>
+{% endif %}
+    <a href="{% url 'core:rastreo' %}" {% if pagina == 'rastreo' %} aria-current="page" {% endif %} >Rastrear envío</a>
+<a href="{% url 'core:ayuda' %}" {% if pagina == 'ayuda' %} aria-current="page" {% endif %} >Ayuda</a>
+</nav>
+<div class="top-user">
+<span class="demo-indicator">
+<i>
+</i> Demo interactiva</span>
+{% if mostrar_menu %}
+<a class="btn btn-sm btn-quiet" href="{% url 'core:inicio' %}">Volver al inicio</a>
+{% endif %}
+  </div>
+</header>
+{% if mostrar_menu %}
+<aside class="sidebar">
+<div class="sidebar-label">CENTRO DE OPERACIONES</div>
+<a href="{% url 'core:panel' %}" class="side-link {% if pagina == 'panel' %} active {% endif %} ">
+<span aria-hidden="true">▦</span> Panel de envíos</a>
+{% if mostrar_menu %}
+<a href="{% url 'core:nuevo_envio' %}" class="side-link {% if pagina == 'nuevo' %} active {% endif %} ">
+<span aria-hidden="true">＋</span> Nuevo envío</a>
+{% endif %}
+  <a href="{% url 'core:rastreo' %}" class="side-link {% if pagina == 'rastreo' %} active {% endif %} ">
+<span aria-hidden="true">◎</span> Seguimiento</a>
+<div class="sidebar-bottom">
+<div class="tour-label">MUSIC PRO TOUR <b>2026</b>
+</div>
+<p>La música se mueve.<br>Nosotros la acompañamos.</p>
+<a href="{% url 'core:ayuda' %}" class="text-link">Guía del portal ↗</a>
+<div class="demo-note">Entorno de demostración<br>Datos de ejemplo · Unidad 1</div>
+</div>
+</aside>
+{% endif %}
+<main id="contenido" class="main-content" tabindex="-1">
 <section class="hero-public">
-  <div class="eyebrow"><span class="tag">MUSIC PRO TOUR 2026</span> DE LA BODEGA AL ESCENARIO</div>
-  <h1>La música no se detiene.<br><span>Tu logística tampoco.</span></h1>
-  <p>Todo tu equipo, siempre en el radar. Gestiona tus despachos y sigue cada etapa del viaje en un solo lugar.</p>
+<div class="eyebrow">
+<span class="tag">MUSIC PRO TOUR 2026</span> DE LA BODEGA AL ESCENARIO</div>
+<h1>La música no se detiene.<br>
+<span>Tu logística tampoco.</span>
+</h1>
+<p>Todo tu equipo, siempre en el radar. Gestiona tus despachos y sigue cada etapa del viaje en un solo lugar.</p>
 </section>
 <div class="access-grid">
-  <section class="tracking-column">
-    <div class="panel-card tracking-card">
-      <div class="section-heading"><span class="icon-box" aria-hidden="true">◎</span><div><h2>¿Dónde está tu envío?</h2><p>Sigue su recorrido con tu código de seguimiento.</p></div></div>
-      <form action="{% url 'core:rastreo' %}" method="get" class="tracking-form"><div><label class="form-label" for="id_codigo">Código de seguimiento</label>{{ rastreo_form.codigo }}</div><button class="btn btn-primary" type="submit">Rastrear envío <span aria-hidden="true">→</span></button></form>
-      <p class="example-code">Prueba con <a href="{% url 'core:detalle_envio' 'MP-2026-001' %}">MP-2026-001</a> o <a href="{% url 'core:detalle_envio' 'MP-2026-004' %}">MP-2026-004</a></p>
-      <div class="journey-illustration" aria-label="Etapas del envío"><div><span>01</span><b>En bodega</b><small>Preparado con cuidado</small></div><i></i><div><span>02</span><b>Enviado</b><small>Despacho confirmado</small></div><i></i><div><span>03</span><b>En camino</b><small>Cada vez más cerca</small></div><i></i><div><span>04</span><b>Recibido</b><small>Listo para sonar</small></div></div>
-    </div>
-    <div class="feature-grid"><article><span aria-hidden="true">↗</span><h3>Un solo lugar</h3><p>Consulta tus despachos de forma simple y ordenada.</p></article><article><span aria-hidden="true">◷</span><h3>Cada etapa cuenta</h3><p>Revisa el estado y el historial de tus equipos.</p></article><article><span aria-hidden="true">◇</span><h3>Hecho para la música</h3><p>Instrumentos y audio profesional, de origen a destino.</p></article></div>
-  </section>
-  <section class="panel-card login-card">
-    <div class="eyebrow">TU CENTRO DE OPERACIONES</div><h2>Bienvenido de vuelta</h2><p class="muted">Ingresa para gestionar y consultar tus envíos.</p>
-    <form method="post" action="{% url 'core:inicio' %}">{% csrf_token %}{% include 'core/campos_formulario.html' %}<button class="btn btn-primary w-100" type="submit">Ingresar al portal <span aria-hidden="true">→</span></button></form>
-    <p class="register-link">¿Primera vez aquí? <a href="{% url 'core:registro' %}">Crea tu cuenta</a></p>
-    <details class="demo-credentials"><summary>Credenciales de demostración</summary><p><b>Operaciones:</b> admin@musicpro.test<br><b>Cliente:</b> cliente@musicpro.test<br><b>Contraseña:</b> <code>MusicPro2026!</code></p><p>Sesiones temporales. Usa únicamente datos ficticios.</p></details>
-  </section>
+<section class="tracking-column">
+<div class="panel-card tracking-card">
+<div class="section-heading">
+<span class="icon-box" aria-hidden="true">◎</span>
+<div>
+<h2>¿Dónde está tu envío?</h2>
+<p>Sigue su recorrido con tu código de seguimiento.</p>
 </div>
-{% endblock %}
+</div>
+<form action="{% url 'core:rastreo' %}" method="get" class="tracking-form">
+<div>
+<label class="form-label" for="id_codigo">Código de seguimiento</label>
+<input class="form-control" id="id_codigo" name="codigo" value="{{ codigo }}" maxlength="40" placeholder="Ej. MP-2026-001" required>
+</div>
+<button class="btn btn-primary" type="submit">Rastrear envío <span aria-hidden="true">→</span>
+</button>
+</form>
+<p class="example-code">Prueba con <a href="{% url 'core:detalle_envio' 'MP-2026-001' %}">MP-2026-001</a> o <a href="{% url 'core:detalle_envio' 'MP-2026-004' %}">MP-2026-004</a>
+</p>
+<div class="journey-illustration" aria-label="Etapas del envío">
+<div>
+<span>01</span>
+<b>En bodega</b>
+<small>Preparado con cuidado</small>
+</div>
+<i>
+</i>
+<div>
+<span>02</span>
+<b>Enviado</b>
+<small>Despacho confirmado</small>
+</div>
+<i>
+</i>
+<div>
+<span>03</span>
+<b>En camino</b>
+<small>Cada vez más cerca</small>
+</div>
+<i>
+</i>
+<div>
+<span>04</span>
+<b>Recibido</b>
+<small>Listo para sonar</small>
+</div>
+</div>
+</div>
+<div class="feature-grid">
+<article>
+<span aria-hidden="true">↗</span>
+<h3>Un solo lugar</h3>
+<p>Consulta tus despachos de forma simple y ordenada.</p>
+</article>
+<article>
+<span aria-hidden="true">◷</span>
+<h3>Cada etapa cuenta</h3>
+<p>Revisa el estado y el historial de tus equipos.</p>
+</article>
+<article>
+<span aria-hidden="true">◇</span>
+<h3>Hecho para la música</h3>
+<p>Instrumentos y audio profesional, de origen a destino.</p>
+</article>
+</div>
+</section>
+<section class="panel-card login-card">
+<div class="eyebrow">TU CENTRO DE OPERACIONES</div>
+<h2>Bienvenido de vuelta</h2>
+<p class="muted">Acceso de demostración. Puedes entrar dejando los campos vacíos.</p>
+<form method="post" novalidate action="{% url 'core:inicio' %}">{% csrf_token %}<div class="campo">
+<label class="form-label" for="id_correo">Correo de ejemplo</label>
+<input class="form-control" id="id_correo" name="correo" type="text" placeholder="nombre@ejemplo.test" autocomplete="off">
+</div>
+<div class="campo">
+<label class="form-label" for="id_contrasena">Contraseña de ejemplo</label>
+<input class="form-control" id="id_contrasena" name="contrasena" type="password" autocomplete="off" placeholder="Opcional">
+</div>
+<button class="btn btn-primary w-100" type="submit">Ingresar al portal <span aria-hidden="true">→</span>
+</button>
+</form>
+<p class="register-link">¿Primera vez aquí? <a href="{% url 'core:registro' %}">Ver registro de ejemplo</a>
+</p>
+<div class="demo-credentials">
+<p>Estos campos son una muestra visual. No se comprueban credenciales ni se crean sesiones.</p>
+</div>
+</section>
+</div>
+<footer class="page-footer">
+<span>© 2026 Music Pro · Transporte y despachos</span>
+<span>Prototipo académico · Datos ficticios</span>
+</footer>
+</main>
+</body>
+</html>
