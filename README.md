@@ -1,139 +1,123 @@
-# Music Pro Courier · Django y JSON
+# Music Pro Courier · Prototipo U1
 
-Prototipo de **Transporte y Despachos** para la Evaluación 1 de Programación Backend. Permite consultar el recorrido de instrumentos musicales, gestionar órdenes temporales y mostrar información según el rol del usuario.
+Portal académico de Transporte y Despachos, construido con Django, HTML semántico, Bootstrap y CSS propio. Conserva el diseño del portal y presenta ocho envíos ficticios leídos desde un archivo JSON.
 
-**Proyecto:** `bibliotecainacap` · **Aplicación:** `core` · **Python:** 3.12 o superior · **Django:** 6.1
+La versión actual se ajusta a la corrección solicitada para la presentación: **sin modelos, Django Forms, base de datos, autenticación, sesiones ni plantillas heredadas o parciales**. Cada página contiene su documento HTML completo.
 
-[Ver diagrama de flujo en PDF](diagrama_music_pro.pdf)
+## Iniciar en este computador
 
-## Ejecutar el proyecto
-
-Descarga el repositorio con **Code → Download ZIP** y descomprímelo, o clónalo:
+Abre la terminal de Visual Studio Code en la carpeta del proyecto y ejecuta:
 
 ```powershell
-git clone https://github.com/benjaminbenjabenjaben-cpu/BackEndd.git
-cd BackEndd
+.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000 --noreload
 ```
 
-Desde la carpeta que contiene `requirements.txt`, crea el entorno e instala las dependencias:
+Abre **http://127.0.0.1:8000/**. Mantén abierta la terminal; `Ctrl+C` detiene el servidor. No hace falta activar el entorno porque el comando usa directamente su Python. Si modificas Python, detén y vuelve a iniciar el servidor.
+
+Para instalar en otro equipo con Python 3.12 o superior:
 
 ```powershell
 python -m venv venv
 .\venv\Scripts\python.exe -m pip install -r requirements.txt
-.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000 --noreload
+.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver
 ```
 
-Abre **http://127.0.0.1:8000/** y mantén la terminal abierta. `Ctrl+C` detiene el servidor. Si `venv` ya existe y tiene las dependencias instaladas, basta con ejecutar el último comando.
+No se necesita ejecutar migraciones ni crear un superusuario. Las plantillas se abren a través del servidor Django.
 
-No abras las plantillas HTML directamente: necesitan ser procesadas por Django. El entorno virtual se crea en cada computador; no se incluye en el repositorio.
+## Recorrido para la evaluación
 
-**Esta entrega no usa base de datos ni requiere `migrate`.** Los datos iniciales se leen desde JSON. El backend de base de datos de Django está configurado como `dummy`.
+1. Abre el inicio y presiona **Ingresar al portal**. Puedes dejar los campos vacíos: son visuales y no se validan credenciales.
+2. En el panel muestra los cuatro contadores, la tabla, los filtros y la segunda página de resultados.
+3. Busca `MP-2026-001` y explica sus etapas e historial. `MP-2026-004` es un ejemplo recibido.
+4. Usa **Nuevo envío**, completa datos ficticios y muestra su vista previa.
+5. Abre un envío en curso y usa **Actualizar estado** para ver cómo quedaría la siguiente etapa.
+6. Vuelve al panel: los ocho ejemplos originales permanecen iguales. Ninguna de las dos acciones guarda cambios.
+7. Exporta los resultados filtrados en JSON.
 
-## Accesos de demostración
+El registro también es visual: envía un formulario y muestra una confirmación, pero no crea cuentas. Las fechas, personas y direcciones son ficticias; no hay GPS ni integración con entregas reales.
 
-| Rol | Correo | Contraseña |
-|---|---|---|
-| Administrador de operaciones | `admin@musicpro.test` | `MusicPro2026!` |
-| Cliente | `cliente@musicpro.test` | `MusicPro2026!` |
+## Cómo explicar el backend
 
-Las credenciales son públicas y corresponden a cuentas ficticias para la evaluación.
+> El navegador solicita una dirección. Django busca esa ruta en urls.py y ejecuta una función de views.py. La función obtiene los datos de ejemplo del JSON, prepara un diccionario llamado contexto y usa render para generar la página HTML. El navegador recibe el HTML terminado.
 
-Códigos de ejemplo: `MP-2026-001` (en camino), `MP-2026-002` (en bodega), `MP-2026-003` (enviado) y `MP-2026-004` (recibido).
+```mermaid
+flowchart LR
+    N[Navegador] --> U[urls.py]
+    U --> V[Función en views.py]
+    J[envios.json] --> S[services.py: listas y diccionarios]
+    S --> V
+    V --> C[Contexto]
+    C --> T[HTML independiente]
+    T --> R[Respuesta al navegador]
+```
 
-## Funciones implementadas
+| Archivo o función | Qué explicar |
+|---|---|
+| `core/urls.py` | Relaciona direcciones como `/panel/` con funciones de las vistas. |
+| `inicio` | GET muestra el acceso visual. POST redirige al panel sin comprobar correo ni contraseña. |
+| `registro` | Muestra un formulario HTML y una confirmación de ejemplo al recibir POST. |
+| `panel` | Lee los ocho envíos, aplica filtros, calcula contadores y pagina los resultados de seis en seis. |
+| `rastreo` | Obtiene el código de GET, elimina espacios, convierte a mayúsculas y busca el envío. |
+| `detalle_envio` | Busca un envío y devuelve su HTML; responde con estado 404 si no existe. |
+| `mostrar_detalle` | Prepara las cuatro etapas del recorrido y el contexto del detalle. Es una función Python auxiliar. |
+| `nuevo_envio` | Lee campos de POST, comprueba los datos de carga con Python y muestra una vista previa sin guardarla. |
+| `actualizar_estado` | Prepara la siguiente etapa e historial para una vista previa sin modificar el JSON. |
+| `exportar_envios` | Devuelve los ejemplos filtrados mediante `JsonResponse` como archivo descargable. |
+| `ayuda` | Genera la página con instrucciones del portal. |
+| `salir` | Conserva la ruta anterior: redirige al inicio; no hay una sesión que cerrar. |
+| `services.cargar_envios` | Abre `data/envios.json` en modo lectura y lo convierte en una lista de diccionarios. |
+| `services.preparar_envio` | Calcula etiquetas, porcentaje y fechas para la presentación. |
+| `services.filtrar_envios` | Selecciona elementos de la lista según texto y estado. |
 
-- Registro de cliente temporal, inicio y cierre de sesión.
-- Panel con indicadores calculados, búsqueda, filtros por estado y paginación.
-- Creación de envíos con validación de correo, peso, bultos y campos obligatorios.
-- Seguimiento secuencial: **En bodega → Enviado → En camino → Recibido**.
-- Historial con nota y fecha para cada cambio de estado.
-- Rastreo público con información limitada; el detalle requiere una cuenta autorizada.
-- Exportación JSON de los resultados visibles y filtrados.
-- Diseño adaptable a celulares, formularios con etiquetas y navegación por teclado.
+**GET** se usa para consultar y filtrar. **POST** recibe los campos enviados desde un formulario. `render` devuelve HTML y `redirect` lleva al navegador a otra dirección.
 
-El administrador ve ocho envíos iniciales. El cliente de ejemplo ve los cuatro asociados a su correo. Una cuenta recién creada comienza sin envíos.
+Los formularios usan etiquetas `<form>`, `<label>`, `<input>`, `<select>` y `<textarea>` escritas directamente en cada HTML. No existe `forms.py`, ni clases `forms.Form`, ni `ModelForm`. Las comprobaciones simples de bultos y peso evitan errores de conversión; el acceso no valida usuarios. `{% csrf_token %}` protege el envío de formularios y no es una validación de inicio de sesión.
 
-## Organización del código
+Las plantillas tienen `header`, `nav`, `main`, `section` y `footer`. Usan variables `{{ ... }}`, condiciones `{% if %}` y ciclos `{% for %}` para mostrar el contexto. No usan `extends`, `include` ni `block`. Los CSS y JavaScript siguen siendo archivos estáticos comunes.
+
+El `include` de `bibliotecainacap/urls.py` solamente conecta las rutas de la aplicación: no incluye fragmentos HTML ni implementa herencia de plantillas.
+
+**Framework CSS de esta versión:** Bootstrap local, junto a `portal.css`. La versión actual no carga Tailwind. Se conserva este diseño en la corrección.
+
+## Archivos principales
 
 ```text
 bibliotecainacap/
   manage.py
   bibliotecainacap/
-    settings.py             Configuración del proyecto
-    urls.py                 Rutas principales
+    settings.py
+    urls.py
   core/
-    urls.py                 Rutas semánticas de la aplicación
-    views.py                Peticiones, permisos y contextos
-    forms.py                Validaciones del servidor
-    services.py             Lectura de JSON y filtros
-    context_processors.py   Datos compartidos de la sesión
-    data/envios.json         Despachos ficticios
-    templates/core/         Plantillas DTL
-    static/core/            Bootstrap, CSS, JavaScript e imagen local
-    tests.py                Pruebas funcionales
-requirements.txt
-diagrama_music_pro.pdf
-README.md
+    urls.py
+    views.py
+    services.py
+    tests.py
+    data/envios.json
+    templates/core/
+      iniciar_sesion.html
+      registro_usuario.html
+      panel_envios.html
+      buscar_envio.html
+      detalle_envio.html
+      nuevo_envio.html
+      actualizar_estado.html
+      ayuda.html
+      error.html
+    static/core/
+      portal.css
+      portal.js
+      concierto.jpg
+      favicon.svg
+      vendor/
 ```
 
-## Flujo general
-
-```mermaid
-flowchart TD
-    A[Inicio] --> B{Acción del usuario}
-    B -->|Rastrear| C[Consultar código y estado]
-    B -->|Registrarse| D[Validar datos y crear cuenta temporal]
-    D --> A
-    B -->|Iniciar sesión| E{Credenciales válidas}
-    E -->|No| A
-    E -->|Sí| F[Panel según rol y correo]
-    F --> G[Buscar, filtrar y consultar envíos]
-    F --> H{Administrador}
-    H -->|Sí| I[Crear envío o actualizar estado]
-    H -->|No| G
-    F --> J[Exportar resultados permitidos]
-    F --> K[Cerrar sesión y reiniciar cambios]
-    K --> A
-```
-
-El [PDF del diagrama](diagrama_music_pro.pdf) desarrolla las decisiones de acceso, registro, rastreo, privacidad y gestión de envíos.
-
-## Verificación
+## Verificación y avances
 
 ```powershell
 .\venv\Scripts\python.exe bibliotecainacap\manage.py check
 .\venv\Scripts\python.exe bibliotecainacap\manage.py test core
 ```
 
-**16 pruebas funcionales** comprueban permisos, privacidad, filtros, paginación, registro, exportación, creación, estados, cierre de sesión y CSRF. También verifican el peso mínimo exacto de 0,1 kg, los formularios POST vacíos y el cierre de la estimación al recibir un envío.
+Las 14 pruebas comprueban navegación sin cuentas, acceso visual, filtros, paginación, rastreo, detalle, vistas previas sin modificar el JSON, exportación, escape del texto y protección CSRF. Usan `SimpleTestCase`, que impide consultas a una base de datos.
 
-Las pruebas usan `SimpleTestCase`, que rechaza consultas a la base de datos.
-
-## Alcance de la Evaluación 1
-
-La pauta de U1 pide Django con JSON y sin conexión a base de datos. Las cuentas registradas duran hasta dos horas en caché. Las contraseñas de esas cuentas se guardan como hashes de Django. Los cambios de envíos pertenecen a la sesión y **no se comparten entre navegadores**. Salir, expirar la sesión o reiniciar el servidor reinicia esos cambios; el JSON de ejemplo permanece.
-
-La web es una demostración local con `DEBUG=True`. No incluye GPS, notificaciones reales, cálculo de rutas, firmas digitales, base de datos, administrador persistente ni API DRF/JWT. Las ETAs son información de ejemplo. Las funciones posteriores deben ajustarse al alcance aprobado por el docente.
-
-## Relación con la rúbrica
-
-| Aspecto | Evidencia |
-|---|---|
-| Atributos y tipos | JSON de envíos, formularios y estructuras Python |
-| Validaciones | `forms.py`, límites numéricos y reglas de estado |
-| Condiciones y bucles | Permisos, filtros, contadores e historial |
-| Plantillas dinámicas | `for`, `if`, `empty`, herencia y filtros DTL |
-| Paquetes y módulos | Django, Bootstrap, formularios, mensajes y sesiones |
-| Estructura del proyecto | Proyecto `bibliotecainacap`, aplicación `core` |
-| Rutas y contextos | `urls.py`, nombres de ruta, `render` y diccionarios |
-| Flujo e integración | Diagrama PDF, prueba en navegador y pruebas funcionales |
-
-La evaluación incluye la presentación del estudiante y la validación del alcance por el docente. Este README no acredita esa aprobación ni garantiza una calificación.
-
-## Referentes y apoyo de IA
-
-Se revisaron [Onfleet](https://onfleet.com/route-planning) y [Route4Me](https://support.route4me.com/faq/how-to-collect-paperless-pod/) como referentes de seguimiento y comprobantes de entrega. Para este prototipo se adoptaron el código de seguimiento, la separación de estados y el historial; las funciones avanzadas quedan para un alcance posterior.
-
-El diseño parte de las interfaces Stitch proporcionadas durante el desarrollo. [Bootstrap 5.3.8](https://getbootstrap.com/docs/5.3/getting-started/download/) se incluye localmente con su licencia MIT. La navegación no necesita descargar recursos externos.
-
-Se utilizó IA como apoyo para adaptar las interfaces, corregir rutas, revisar validaciones y preparar pruebas. El estudiante debe comprender y explicar el código utilizado.
+Para mostrar avances al profesor, abre el historial **Commits** de [este repositorio](https://github.com/benjaminbenjabenjaben-cpu/BackEndd). El historial conserva la implementación inicial y registra la simplificación y actualización de esta guía como cambios posteriores reales. Cada nuevo avance debe registrarse después de realizarlo y comprobarlo; no se alteran fechas ni se reconstruye un historial ficticio.
