@@ -1,8 +1,60 @@
-# Music Pro Courier · Prototipo U1
+# Music Pro Courier · Proyecto semestral
 
 Portal  de Transporte y Despachos, construido con Django, HTML semántico, Bootstrap y CSS propio. Conserva el diseño del portal y presenta ocho envíos ficticios leídos desde un archivo JSON.
 
+## Evaluación 2 · Paso 1: modelos y migración inicial
 
+La conexión usa **SQLite**, configurada en `bibliotecainacap/bibliotecainacap/settings.py`.
+El archivo local es `bibliotecainacap/db.sqlite3`; se puede abrir con la extensión SQLite DB Viewer.
+
+Se agregaron dos modelos en `core/models.py`:
+
+- **Envio:** contiene los datos de un despacho, como código único, destinatario, carga y estado.
+- **HistorialSeguimiento:** contiene los eventos de un envío, con estado, título, nota y fecha.
+
+Un envío puede tener varios eventos. La relación se define con `ForeignKey` y `related_name="historial"`. Al eliminar un envío mediante Django, `on_delete=models.CASCADE` elimina también sus eventos. Django crea automáticamente la clave primaria `id` de cada modelo. `__str__` define el texto legible de cada registro.
+
+```mermaid
+erDiagram
+    ENVIO ||--o{ HISTORIAL_SEGUIMIENTO : tiene
+    ENVIO {
+        bigint id PK
+        varchar codigo UK
+        varchar estado
+        varchar destinatario
+        varchar origen
+        varchar destino
+        varchar equipo
+        integer bultos
+        decimal peso
+        varchar prioridad
+        varchar conductor
+        varchar patente
+        varchar eta
+        varchar cliente
+    }
+    HISTORIAL_SEGUIMIENTO {
+        bigint id PK
+        bigint envio_id FK
+        varchar estado
+        varchar titulo
+        text nota
+        datetime fecha
+    }
+```
+
+La migración `core/migrations/0001_initial.py` crea las tablas `core_envio` y `core_historialseguimiento`. Fue generada por Django y aplicada a la base local.
+
+```powershell
+# Generar archivos cuando se crean o modifican modelos:
+.\venv\Scripts\python.exe bibliotecainacap\manage.py makemigrations core
+# Aplicar las migraciones existentes a la base local:
+.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
+# Comprobar cuáles están aplicadas; [X] indica aplicada:
+.\venv\Scripts\python.exe bibliotecainacap\manage.py showmigrations core
+```
+
+**Estado de este paso:** las tablas están creadas y vacías. La interfaz todavía consulta los ejemplos JSON de U1. Django Admin, la carga de datos y las siguientes etapas de la evaluación se incorporarán en avances posteriores. El archivo SQLite no se publica en GitHub: se reconstruye con las migraciones.
 
 ## Iniciar en este computador
 
@@ -19,6 +71,7 @@ Para instalar en otro equipo con Python 3.12 o superior:
 ```powershell
 python -m venv venv
 .\venv\Scripts\python.exe -m pip install -r requirements.txt
+.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
 .\venv\Scripts\python.exe bibliotecainacap\manage.py runserver
 ```
 
@@ -52,6 +105,8 @@ bibliotecainacap/
     urls.py
     views.py
     services.py
+    models.py
+    migrations/0001_initial.py
     tests.py
     data/envios.json
     templates/core/
@@ -79,4 +134,5 @@ bibliotecainacap/
 .\venv\Scripts\python.exe bibliotecainacap\manage.py test core
 ```
 
+Las pruebas de modelos verifican el guardado, consulta, modificación, eliminación, código único y relación del historial. Se ejecutan en una base de prueba independiente, sin llenar ni modificar los registros de la base local.
 

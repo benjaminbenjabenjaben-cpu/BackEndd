@@ -1,4 +1,4 @@
-"""Configuración del prototipo académico: HTML, estáticos y datos JSON."""
+"""Configuración de Music Pro: interfaz U1 y base de datos SQLite para U2."""
 import os
 import secrets
 from pathlib import Path
@@ -23,7 +23,12 @@ TEMPLATES = [{
     "OPTIONS": {"context_processors": []},
 }]
 WSGI_APPLICATION = "bibliotecainacap.wsgi.application"
-# No se configura ninguna conexión. Django usa su valor predeterminado vacío.
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 LANGUAGE_CODE = "es-cl"
 TIME_ZONE = "America/Santiago"
 USE_I18N = True

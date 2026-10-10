@@ -1,10 +1,12 @@
-"""Pruebas del recorrido del prototipo; SimpleTestCase impide usar una BD."""
+"""Pruebas de la interfaz U1 y de los modelos de base de datos U2."""
 from pathlib import Path
 import re
 
-from django.conf import settings
-from django.test import Client, SimpleTestCase
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, transaction
+from django.test import Client, SimpleTestCase, TestCase
 
+from .models import Envio, HistorialSeguimiento
 from .services import DATOS
 
 
@@ -103,17 +105,14 @@ class PortalTests(SimpleTestCase):
         self.assertNotContains(respuesta, '<script>alert("x")</script>')
         self.assertContains(respuesta, "&lt;script&gt;")
 
-    def test_html_independiente_y_sin_componentes_excluidos(self):
+    def test_html_independiente_y_formularios_html(self):
         core = Path(__file__).resolve().parent
-        for nombre in ("models.py", "forms.py", "context_processors.py"):
+        for nombre in ("forms.py", "context_processors.py"):
             self.assertFalse((core / nombre).exists())
-        self.assertFalse(list(settings.BASE_DIR.glob("*.sqlite3")))
         for plantilla in (core / "templates" / "core").glob("*.html"):
             texto = plantilla.read_text(encoding="utf-8")
             self.assertIn("<!doctype html>", texto)
             self.assertFalse(re.search(r"{%\s*(extends|include|block)\b", texto), plantilla)
-        self.assertNotIn("django.contrib.auth", settings.INSTALLED_APPS)
-        self.assertNotIn("django.contrib.sessions", settings.INSTALLED_APPS)
 
     def test_post_conserva_csrf_sin_autenticacion(self):
         navegador = Client(enforce_csrf_checks=True)
@@ -121,3 +120,59 @@ class PortalTests(SimpleTestCase):
         navegador.get("/")
         token = navegador.cookies["csrftoken"].value
         self.assertRedirects(navegador.post("/", {"csrfmiddlewaretoken": token}), "/panel/")
+
+
+class ModelosTests(TestCase):
+    def crear_envio(self, **cambios):
+        datos = {
+            "codigo": "MP-2026-001", "destinatario": "Sucursal de prueba",
+            "origen": "Bodega Central", "destino": "Calle de ejemplo 123",
+            "equipo": "Guitarra", "bultos": 1, "peso": "12.5",
+            "cliente": "cliente@ejemplo.test",
+        }
+        datos.update(cambios)
+        return Envio.objects.create(**datos)
+
+    def test_guardar_consultar_modificar_y_eliminar(self):
+        envio = self.crear_envio()
+        self.assertEqual(Envio.objects.get(codigo=envio.codigo).destinatario,
+                         "Sucursal de prueba")
+        envio.destinatario = "Teatro de prueba"
+        envio.save()
+        envio.refresh_from_db()
+        self.assertEqual(envio.destinatario, "Teatro de prueba")
+        envio.delete()
+        self.assertEqual(Envio.objects.count(), 0)
+
+    def test_codigo_no_se_puede_repetir(self):
+        self.crear_envio()
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                self.crear_envio()
+
+    def test_un_envio_tiene_varios_eventos_y_se_eliminan_con_el(self):
+        envio = self.crear_envio()
+        HistorialSeguimiento.objects.create(
+            envio=envio, estado="bodega", titulo="Preparación en bodega",
+        )
+        HistorialSeguimiento.objects.create(
+            envio=envio, estado="enviado", titulo="Despacho confirmado",
+        )
+        self.assertEqual(envio.historial.count(), 2)
+        self.assertEqual(envio.historial.first().estado, "bodega")
+        envio.delete()
+        self.assertEqual(HistorialSeguimiento.objects.count(), 0)
+
+    def test_datos_incorrectos_se_rechazan_al_validar(self):
+        for campo, valor in (("bultos", 0), ("peso", "-1.0"),
+                             ("estado", "inexistente"), ("cliente", "sin-correo")):
+            with self.subTest(campo=campo):
+                envio = Envio(
+                    codigo="MP-2026-001", destinatario="Sucursal", origen="Bodega",
+                    destino="Dirección de ejemplo", equipo="Guitarra", bultos=1,
+                    peso="12.5", cliente="cliente@ejemplo.test",
+                )
+                setattr(envio, campo, valor)
+                with self.assertRaises(ValidationError) as error:
+                    envio.full_clean()
+                self.assertIn(campo, error.exception.message_dict)
