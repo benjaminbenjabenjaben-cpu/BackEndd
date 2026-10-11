@@ -49,7 +49,7 @@ class HistorialSeguimiento(models.Model):
     estado = models.CharField(max_length=10, choices=ESTADOS)
     titulo = models.CharField("título", max_length=120)
     nota = models.TextField(blank=True)
-    fecha = models.DateTimeField(default=timezone.now)
+    fecha = models.DateTimeField(default=timezone.now, db_index=True)
 
     class Meta:
         verbose_name = "evento de seguimiento"

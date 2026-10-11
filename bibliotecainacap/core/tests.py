@@ -1,8 +1,11 @@
 """Pruebas de la interfaz U1 y de los modelos de base de datos U2."""
 from pathlib import Path
+from io import StringIO
+from unittest.mock import patch
 import re
 
 from django.core.exceptions import ValidationError
+from django.core.management import call_command, CommandError
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
 from django.test import Client, SimpleTestCase, TestCase
@@ -10,6 +13,7 @@ from django.urls import reverse
 
 from .models import Envio, HistorialSeguimiento
 from .services import DATOS
+from .services import ESTADOS
 
 
 class PortalTests(SimpleTestCase):
@@ -277,3 +281,55 @@ class AdminTests(TestCase):
         self.assertIn("bultos", errores)
         self.assertIn("peso", errores)
         self.assertEqual(Envio.objects.count(), 0)
+
+
+class GeneracionDatosTests(TestCase):
+    def generar(self, cantidad):
+        salida = StringIO()
+        call_command("generar_datos", cantidad, stdout=salida)
+        return salida.getvalue()
+
+    def test_carga_por_lotes_y_relaciones_coherentes(self):
+        salida = self.generar(1001)
+        self.assertEqual(Envio.objects.count(), 1001)
+        self.assertIn("Guardados y verificados: 1001 envíos", salida)
+        self.assertGreaterEqual(HistorialSeguimiento.objects.count(), 1001)
+        self.assertLessEqual(HistorialSeguimiento.objects.count(), 4004)
+        estados = [codigo for codigo, _ in ESTADOS]
+        for envio in Envio.objects.order_by("pk")[:10]:
+            envio.full_clean()
+            self.assertLessEqual(len(envio.codigo), 20)
+            historial = list(envio.historial.values_list("estado", flat=True))
+            self.assertEqual(historial, estados[:estados.index(envio.estado) + 1])
+
+    def test_repetir_carga_agrega_sin_borrar_ni_duplicar_codigos(self):
+        self.generar(1)
+        original = Envio.objects.get()
+        original.destinatario = "Registro editado manualmente"
+        original.save()
+        self.generar(3)
+        self.assertEqual(Envio.objects.count(), 4)
+        self.assertEqual(Envio.objects.values("codigo").distinct().count(), 4)
+        original.refresh_from_db()
+        self.assertEqual(original.destinatario, "Registro editado manualmente")
+
+    def test_cantidades_invalidas_no_insertan(self):
+        for cantidad in (0, -1, 1000001):
+            with self.subTest(cantidad=cantidad):
+                with self.assertRaises(CommandError):
+                    self.generar(cantidad)
+        self.assertEqual(Envio.objects.count(), 0)
+        self.assertEqual(HistorialSeguimiento.objects.count(), 0)
+
+    def test_fallo_de_historial_revierte_la_carga(self):
+        self.generar(1)
+        envios_antes = Envio.objects.count()
+        eventos_antes = HistorialSeguimiento.objects.count()
+        with patch(
+            "core.management.commands.generar_datos.HistorialSeguimiento.objects.bulk_create",
+            side_effect=RuntimeError("Fallo simulado"),
+        ):
+            with self.assertRaises(RuntimeError):
+                self.generar(3)
+        self.assertEqual(Envio.objects.count(), envios_antes)
+        self.assertEqual(HistorialSeguimiento.objects.count(), eventos_antes)

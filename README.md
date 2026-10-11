@@ -44,6 +44,7 @@ erDiagram
 ```
 
 La migración `core/migrations/0001_initial.py` crea las tablas `core_envio` y `core_historialseguimiento`. Fue generada por Django y aplicada a la base local.
+La migración `0002_indexar_fecha_historial.py` agrega un índice a la fecha del historial para consultar sus últimos eventos con grandes volúmenes. Es una modificación real del modelo, registrada después de la migración inicial.
 
 ```powershell
 # Generar archivos cuando se crean o modifican modelos:
@@ -88,7 +89,52 @@ Estas operaciones sí guardan los cambios en SQLite. Puedes comprobarlos abriend
 
 `settings.py` habilita las aplicaciones, sesiones, permisos y mensajes que necesita Django Admin; la ruta `/admin/` se declara en el `urls.py` del proyecto. Las migraciones de Django crean sus tablas de usuarios, permisos, sesiones y registro de acciones, además de las dos tablas de nuestros modelos.
 
-**Estado de este paso:** administrador funcional y acceso local verificado. La carga de datos ficticios con Faker queda para el siguiente avance. El panel `/panel/` sigue siendo la demostración JSON de U1.
+El panel `/panel/` sigue siendo la demostración JSON de U1. Los registros almacenados en SQLite se consultan y administran desde `/admin/`.
+
+## Evaluación 2 · Paso 3: datos ficticios con Faker
+
+El comando `generar_datos` está en `core/management/commands/generar_datos.py`. Recibe la cantidad de **envíos nuevos** y crea sus eventos de seguimiento. Se usa desde la terminal, en la carpeta que contiene `requirements.txt`.
+
+```powershell
+# Instalar las dependencias en otra instalación o al actualizar el proyecto:
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
+
+# Ejecutar una carga según la cantidad que solicite el docente:
+.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 100
+.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 1000
+.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 100000
+.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 1000000
+```
+
+Cada ejecución **agrega** la cantidad indicada y conserva los registros anteriores. Ejecutar las cuatro cargas seguidas agrega 1.101.100 envíos. No hay una opción de borrado o reinicio de la base en este comando.
+
+- Faker usa la configuración `es_CL` para generar nombres y direcciones ficticios. Los despachos reutilizan un catálogo de hasta 1.000 destinos y 20 conductores, como una operación con rutas recurrentes; no se generan un millón de clientes distintos.
+- Cada envío tiene un código único de ejemplo como `MP-XXXXXXXX-0000001`, carga positiva, estado y prioridad válidos. Los correos usan el dominio ficticio `musicpro.test`.
+- Cada envío recibe entre uno y cuatro eventos, desde **En bodega** hasta su estado actual. Por eso 100 envíos generan entre 100 y 400 registros de historial adicionales.
+- `bulk_create` guarda grupos de objetos. Solo se preparan 1.000 envíos y sus eventos a la vez para limitar el uso de memoria.
+- `transaction.atomic()` confirma la carga completa al finalizar. Si ocurre un error, sus inserciones se revierten y se conservan los datos anteriores.
+- Antes de confirmar, el comando cuenta los envíos y eventos guardados para esa carga y verifica que coincidan con las cantidades generadas. Al finalizar muestra los totales, el tiempo y un código de ejemplo.
+
+Para demostrarlo, ejecuta una carga, entra a **Admin → Envíos**, busca el código que imprimió el comando y consulta su historial. También puedes verificar los totales en SQLite DB Viewer:
+
+```sql
+SELECT COUNT(*) FROM core_envio;
+SELECT COUNT(*) FROM core_historialseguimiento;
+```
+
+La primera carga local contiene **100 envíos y 243 eventos**. Las pruebas de cargas mayores se ejecutan en una base temporal separada; los totales locales aumentarán cuando ejecutes más cargas o agregues registros desde Admin.
+
+Las cuatro cargas se verificaron en este computador con una base temporal SQLite y las migraciones aplicadas:
+
+| Envíos nuevos | Eventos generados | Tiempo medido |
+|---:|---:|---:|
+| 100 | 257 | 0,13 s |
+| 1.000 | 2.504 | 0,24 s |
+| 100.000 | 250.145 | 11,74 s |
+| 1.000.000 | 2.499.906 | 122,05 s |
+
+Las pruebas acumularon 1.101.100 envíos y 2.752.812 eventos en la base temporal. `PRAGMA integrity_check` devolvió `ok` y `PRAGMA foreign_key_check` no encontró errores. La consulta de los últimos 25 eventos con su envío tardó 0,0022 s usando el índice de fecha. Después de verificar los resultados, se eliminó únicamente esa base temporal. Los tiempos y la cantidad de eventos varían según el equipo, los datos previos y los estados aleatorios generados.
 
 ## Iniciar en este computador
 
@@ -142,6 +188,8 @@ bibliotecainacap/
     models.py
     admin.py
     migrations/0001_initial.py
+    migrations/0002_indexar_fecha_historial.py
+    management/commands/generar_datos.py
     tests.py
     data/envios.json
     templates/core/
@@ -171,4 +219,5 @@ bibliotecainacap/
 
 Las pruebas de modelos verifican el guardado, consulta, modificación, eliminación, código único y relación del historial. Se ejecutan en una base de prueba independiente, sin llenar ni modificar los registros de la base local.
 Las pruebas del administrador verifican el acceso, permisos, operaciones CRUD de ambos modelos, búsquedas, filtros, selección del envío y rechazo de datos inválidos.
+Las pruebas de generación verifican cargas que abarcan varios lotes, coherencia de los eventos, conservación de registros previos, códigos diferentes entre ejecuciones, cantidades inválidas y reversión ante un fallo.
 
