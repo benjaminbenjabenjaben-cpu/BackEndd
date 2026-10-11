@@ -3,8 +3,10 @@ from pathlib import Path
 import re
 
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
 from django.test import Client, SimpleTestCase, TestCase
+from django.urls import reverse
 
 from .models import Envio, HistorialSeguimiento
 from .services import DATOS
@@ -176,3 +178,102 @@ class ModelosTests(TestCase):
                 with self.assertRaises(ValidationError) as error:
                     envio.full_clean()
                 self.assertIn(campo, error.exception.message_dict)
+
+
+class AdminTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.administrador = get_user_model().objects.create_superuser(
+            username="admin_prueba", password="Prueba-admin-2026!",
+        )
+        cls.usuario = get_user_model().objects.create_user(username="usuario_prueba")
+
+    def datos_envio(self, **cambios):
+        datos = {
+            "codigo": "MP-2026-001", "estado": "bodega", "prioridad": "normal",
+            "destinatario": "Sucursal de prueba", "origen": "Bodega Central",
+            "destino": "Calle de ejemplo 123", "equipo": "Guitarra",
+            "bultos": "1", "peso": "12.5", "cliente": "cliente@ejemplo.test",
+        }
+        datos.update(cambios)
+        return datos
+
+    def test_admin_exige_acceso_y_permisos(self):
+        for nombre in ("admin:index", "admin:core_envio_changelist",
+                       "admin:core_historialseguimiento_changelist"):
+            respuesta = self.client.get(reverse(nombre))
+            self.assertEqual(respuesta.status_code, 302)
+            self.assertTrue(respuesta.url.startswith(reverse("admin:login")))
+        self.client.force_login(self.usuario)
+        self.assertEqual(self.client.get(reverse("admin:index")).status_code, 302)
+
+    def test_login_real_y_modelos_visibles(self):
+        respuesta = self.client.post(reverse("admin:login"), {
+            "username": "admin_prueba", "password": "Prueba-admin-2026!",
+            "next": reverse("admin:index"),
+        })
+        self.assertRedirects(respuesta, reverse("admin:index"))
+        respuesta = self.client.get(reverse("admin:index"))
+        self.assertContains(respuesta, "Music Pro Courier")
+        self.assertContains(respuesta, reverse("admin:core_envio_changelist"))
+        self.assertContains(respuesta, reverse("admin:core_historialseguimiento_changelist"))
+
+    def test_crud_de_ambos_modelos_desde_admin(self):
+        self.client.force_login(self.administrador)
+        respuesta = self.client.post(reverse("admin:core_envio_add"), self.datos_envio())
+        self.assertRedirects(respuesta, reverse("admin:core_envio_changelist"))
+        envio = Envio.objects.get(codigo="MP-2026-001")
+        editar_envio = reverse("admin:core_envio_change", args=[envio.pk])
+        self.assertContains(self.client.get(editar_envio), "Sucursal de prueba")
+        respuesta = self.client.post(editar_envio, self.datos_envio(destinatario="Teatro"))
+        self.assertEqual(respuesta.status_code, 302)
+        envio.refresh_from_db()
+        self.assertEqual(envio.destinatario, "Teatro")
+
+        datos_evento = {
+            "envio": envio.pk, "estado": "bodega", "titulo": "Preparación",
+            "nota": "Equipos revisados", "fecha_0": "2026-10-10", "fecha_1": "12:30:00",
+        }
+        respuesta = self.client.post(reverse("admin:core_historialseguimiento_add"), datos_evento)
+        self.assertRedirects(respuesta, reverse("admin:core_historialseguimiento_changelist"))
+        evento = envio.historial.get()
+        editar_evento = reverse("admin:core_historialseguimiento_change", args=[evento.pk])
+        self.assertContains(self.client.get(editar_evento), "Equipos revisados")
+        datos_evento["nota"] = "Carga lista para despacho"
+        self.assertEqual(self.client.post(editar_evento, datos_evento).status_code, 302)
+        evento.refresh_from_db()
+        self.assertEqual(evento.nota, "Carga lista para despacho")
+
+        borrar_evento = reverse("admin:core_historialseguimiento_delete", args=[evento.pk])
+        self.assertEqual(self.client.get(borrar_evento).status_code, 200)
+        self.assertEqual(self.client.post(borrar_evento, {"post": "yes"}).status_code, 302)
+        self.assertFalse(HistorialSeguimiento.objects.filter(pk=evento.pk).exists())
+        borrar_envio = reverse("admin:core_envio_delete", args=[envio.pk])
+        self.assertEqual(self.client.get(borrar_envio).status_code, 200)
+        self.assertEqual(self.client.post(borrar_envio, {"post": "yes"}).status_code, 302)
+        self.assertFalse(Envio.objects.filter(pk=envio.pk).exists())
+
+    def test_busqueda_filtros_y_seleccion_de_envio(self):
+        self.client.force_login(self.administrador)
+        primero = Envio.objects.create(**self.datos_envio())
+        Envio.objects.create(**self.datos_envio(codigo="MP-2026-002", estado="camino"))
+        ruta = reverse("admin:core_envio_changelist")
+        for parametros in ({"q": "MP-2026-001"}, {"estado__exact": "bodega"}):
+            respuesta = self.client.get(ruta, parametros)
+            self.assertEqual(list(respuesta.context["cl"].queryset), [primero])
+        respuesta = self.client.get(reverse("admin:autocomplete"), {
+            "app_label": "core", "model_name": "historialseguimiento",
+            "field_name": "envio", "term": "MP-2026-001",
+        })
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual([r["id"] for r in respuesta.json()["results"]], [str(primero.pk)])
+
+    def test_admin_rechaza_carga_invalida(self):
+        self.client.force_login(self.administrador)
+        respuesta = self.client.post(reverse("admin:core_envio_add"),
+                                     self.datos_envio(bultos="0", peso="-1"))
+        self.assertEqual(respuesta.status_code, 200)
+        errores = respuesta.context["adminform"].form.errors
+        self.assertIn("bultos", errores)
+        self.assertIn("peso", errores)
+        self.assertEqual(Envio.objects.count(), 0)

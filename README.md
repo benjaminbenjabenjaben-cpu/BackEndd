@@ -54,7 +54,41 @@ La migración `core/migrations/0001_initial.py` crea las tablas `core_envio` y `
 .\venv\Scripts\python.exe bibliotecainacap\manage.py showmigrations core
 ```
 
-**Estado de este paso:** las tablas están creadas y vacías. La interfaz todavía consulta los ejemplos JSON de U1. Django Admin, la carga de datos y las siguientes etapas de la evaluación se incorporarán en avances posteriores. El archivo SQLite no se publica en GitHub: se reconstruye con las migraciones.
+El archivo SQLite no se publica en GitHub: se reconstruye con las migraciones. La interfaz de U1 todavía consulta los ejemplos JSON.
+
+## Evaluación 2 · Paso 2: Django Admin
+
+El administrador está disponible en **http://127.0.0.1:8000/admin/** y requiere una cuenta de administrador. Los modelos se registran y configuran en `core/admin.py`.
+
+| Modelo | Columnas del listado | Filtros | Búsqueda |
+|---|---|---|---|
+| Envío | Código, destinatario, estado, prioridad y cliente | Estado y prioridad | Código, destinatario y correo del cliente |
+| Historial de seguimiento | Envío, estado, título y fecha | Estado | Código del envío y título |
+
+Cada listado muestra 25 registros por página. Al crear un evento de seguimiento, el campo de envío permite buscar por código. El administrador tiene el título Music Pro Courier y agrupa los modelos bajo Transporte y despachos.
+
+Para crear una cuenta en otra instalación, después de ejecutar `migrate`:
+
+```powershell
+.\venv\Scripts\python.exe bibliotecainacap\manage.py createsuperuser
+```
+
+El comando solicita el nombre de usuario, el correo y una contraseña. Las cuentas y contraseñas locales no se incluyen en el repositorio. Django guarda las contraseñas mediante hashes.
+
+Para demostrar el funcionamiento:
+
+1. Entra a `/admin/` con tu cuenta.
+2. En **Envíos**, presiona **Añadir** y completa los datos del despacho.
+3. Consulta el registro creado, modifica un campo y guarda.
+4. En **Historial de seguimiento**, añade un evento y selecciona el envío mediante la búsqueda.
+5. Usa los filtros y la barra de búsqueda para encontrar registros.
+6. Abre un registro de prueba y usa **Eliminar**, revisando la confirmación antes de borrarlo.
+
+Estas operaciones sí guardan los cambios en SQLite. Puedes comprobarlos abriendo `db.sqlite3` con SQLite DB Viewer. El estado actual del envío y sus eventos se administran de forma explícita: cambiar el estado no crea automáticamente un evento.
+
+`settings.py` habilita las aplicaciones, sesiones, permisos y mensajes que necesita Django Admin; la ruta `/admin/` se declara en el `urls.py` del proyecto. Las migraciones de Django crean sus tablas de usuarios, permisos, sesiones y registro de acciones, además de las dos tablas de nuestros modelos.
+
+**Estado de este paso:** administrador funcional y acceso local verificado. La carga de datos ficticios con Faker queda para el siguiente avance. El panel `/panel/` sigue siendo la demostración JSON de U1.
 
 ## Iniciar en este computador
 
@@ -106,6 +140,7 @@ bibliotecainacap/
     views.py
     services.py
     models.py
+    admin.py
     migrations/0001_initial.py
     tests.py
     data/envios.json
@@ -135,4 +170,5 @@ bibliotecainacap/
 ```
 
 Las pruebas de modelos verifican el guardado, consulta, modificación, eliminación, código único y relación del historial. Se ejecutan en una base de prueba independiente, sin llenar ni modificar los registros de la base local.
+Las pruebas del administrador verifican el acceso, permisos, operaciones CRUD de ambos modelos, búsquedas, filtros, selección del envío y rechazo de datos inválidos.
 
