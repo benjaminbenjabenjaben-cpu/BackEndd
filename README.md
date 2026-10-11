@@ -14,34 +14,13 @@ Se agregaron dos modelos en `core/models.py`:
 
 Un envío puede tener varios eventos. La relación se define con `ForeignKey` y `related_name="historial"`. Al eliminar un envío mediante Django, `on_delete=models.CASCADE` elimina también sus eventos. Django crea automáticamente la clave primaria `id` de cada modelo. `__str__` define el texto legible de cada registro.
 
-```mermaid
-erDiagram
-    ENVIO ||--o{ HISTORIAL_SEGUIMIENTO : tiene
-    ENVIO {
-        bigint id PK
-        varchar codigo UK
-        varchar estado
-        varchar destinatario
-        varchar origen
-        varchar destino
-        varchar equipo
-        integer bultos
-        decimal peso
-        varchar prioridad
-        varchar conductor
-        varchar patente
-        varchar eta
-        varchar cliente
-    }
-    HISTORIAL_SEGUIMIENTO {
-        bigint id PK
-        bigint envio_id FK
-        varchar estado
-        varchar titulo
-        text nota
-        datetime fecha
-    }
-```
+![Modelo de base de datos de Music Pro Courier](diagrama_base_datos.png)
+
+[Imagen PNG para entregar en la plataforma](diagrama_base_datos.png) · [Versión vectorial SVG](diagrama_base_datos.svg)
+
+El diagrama representa los dos modelos propios del módulo, con todos sus campos y tipos de Django. Se verificaron las columnas, claves y los índices contra SQLite. `envio_id` es la columna que Django crea para el campo `envio` de tipo `ForeignKey` y referencia a `core_envio.id`. La cardinalidad es **1 a 0..N**: un envío puede existir sin eventos o tener varios; cada evento requiere un envío.
+
+**Leyenda:** PK = clave primaria; FK = clave foránea; UQ = valor único; IDX = índice. Las tablas internas de usuarios, permisos y sesiones pertenecen a las aplicaciones estándar de Django.
 
 La migración `core/migrations/0001_initial.py` crea las tablas `core_envio` y `core_historialseguimiento`. Fue generada por Django y aplicada a la base local.
 La migración `0002_indexar_fecha_historial.py` agrega un índice a la fecha del historial para consultar sus últimos eventos con grandes volúmenes. Es una modificación real del modelo, registrada después de la migración inicial.
