@@ -9,8 +9,6 @@
 <link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
 <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'core/portal.css' %}">
-<script src="{% static 'core/portal.js' %}" defer>
-</script>
 </head>
 <body class=" {% if mostrar_menu %} con-panel {% else %} publico {% endif %} ">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -73,8 +71,6 @@
 <p>No. Crear un envío y actualizar una etapa muestran una vista previa. Al volver al panel, los ocho envíos originales siguen iguales.</p>
 <h2>¿El seguimiento utiliza GPS?</h2>
 <p>Las etapas, fechas, direcciones y personas son ejemplos ficticios. No hay GPS ni conexión con entregas reales.</p>
-<h2>¿Qué puedo exportar?</h2>
-<p>Desde el panel puedes descargar los envíos de ejemplo en formato JSON. La descarga respeta el texto y el estado que hayas usado para filtrar.</p>
 <a href="{% url 'core:panel' %}" class="btn btn-primary">Ir al panel →</a>
 </div>
 </section>

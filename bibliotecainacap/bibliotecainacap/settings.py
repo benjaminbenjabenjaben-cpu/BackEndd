@@ -1,10 +1,9 @@
 """Configuración de Music Pro: interfaz U1 y base de datos SQLite para U2."""
-import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Clave estable para desarrollo local; permite conservar las sesiones al reiniciar.
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or "django-insecure-music-pro-desarrollo-local-u2"
+SECRET_KEY = "django-insecure-music-pro-desarrollo-local-u2"
 DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
@@ -23,6 +22,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "core.middleware.admin_local_sin_contrasena",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -44,15 +44,8 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-]
 LANGUAGE_CODE = "es-cl"
 TIME_ZONE = "America/Santiago"
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"

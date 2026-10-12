@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.management import call_command, CommandError
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
-from django.test import Client, SimpleTestCase, TestCase
+from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
 from .models import Envio, HistorialSeguimiento
@@ -98,13 +98,6 @@ class PortalTests(SimpleTestCase):
         self.assertRedirects(self.client.get("/envios/MP-2026-004/estado/"),
                              "/rastreo/MP-2026-004/")
         self.assertEqual(self.client.get("/envios/NO-EXISTE/estado/").status_code, 404)
-
-    def test_exportacion_respeta_filtros(self):
-        respuesta = self.client.get("/envios/exportar/", {"estado": "bodega"})
-        self.assertEqual(respuesta.status_code, 200)
-        self.assertEqual(respuesta.json()["total"], 2)
-        self.assertTrue(all(e["estado"] == "bodega" for e in respuesta.json()["envios"]))
-        self.assertIn("attachment", respuesta["Content-Disposition"])
 
     def test_texto_ingresado_se_escapa(self):
         respuesta = self.client.get("/panel/", {"q": '<script>alert("x")</script>'})
@@ -222,8 +215,17 @@ class AdminTests(TestCase):
         self.assertContains(respuesta, reverse("admin:core_envio_changelist"))
         self.assertContains(respuesta, reverse("admin:core_historialseguimiento_changelist"))
 
+    @override_settings(DEBUG=True)
+    def test_acceso_directo_solo_local_y_con_superadministrador_existente(self):
+        self.assertContains(self.client.get(reverse("admin:index")), "Music Pro Courier")
+        respuesta = self.client.get(reverse("admin:index"), REMOTE_ADDR="192.0.2.1")
+        self.assertEqual(respuesta.status_code, 302)
+        self.assertTrue(respuesta.url.startswith(reverse("admin:login")))
+        self.administrador.delete()
+        self.assertEqual(self.client.get(reverse("admin:index")).status_code, 302)
+
+    @override_settings(DEBUG=True)
     def test_crud_de_ambos_modelos_desde_admin(self):
-        self.client.force_login(self.administrador)
         respuesta = self.client.post(reverse("admin:core_envio_add"), self.datos_envio())
         self.assertRedirects(respuesta, reverse("admin:core_envio_changelist"))
         envio = Envio.objects.get(codigo="MP-2026-001")

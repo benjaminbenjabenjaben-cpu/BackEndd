@@ -1,202 +1,160 @@
-# Music Pro Courier · Proyecto semestral
+# Music Pro Courier
 
-Portal  de Transporte y Despachos, construido con Django, HTML semántico, Bootstrap y CSS propio. Conserva el diseño del portal y presenta ocho envíos ficticios leídos desde un archivo JSON.
+Proyecto Django de Transporte y Despachos para la Evaluación 2.
+Usa SQLite, dos modelos relacionados, migraciones, Django Admin y Faker.
 
-## Evaluación 2 · Paso 1: modelos y migración inicial
+## Iniciar la página
 
-La conexión usa **SQLite**, configurada en `bibliotecainacap/bibliotecainacap/settings.py`.
-El archivo local es `bibliotecainacap/db.sqlite3`; se puede abrir con la extensión SQLite DB Viewer.
-
-Se agregaron dos modelos en `core/models.py`:
-
-- **Envio:** contiene los datos de un despacho, como código único, destinatario, carga y estado.
-- **HistorialSeguimiento:** contiene los eventos de un envío, con estado, título, nota y fecha.
-
-Un envío puede tener varios eventos. La relación se define con `ForeignKey` y `related_name="historial"`. Al eliminar un envío mediante Django, `on_delete=models.CASCADE` elimina también sus eventos. Django crea automáticamente la clave primaria `id` de cada modelo. `__str__` define el texto legible de cada registro.
-
-![Modelo de base de datos de Music Pro Courier](diagrama_base_datos.png)
-
-[Imagen PNG para entregar en la plataforma](diagrama_base_datos.png) · [Versión vectorial SVG](diagrama_base_datos.svg)
-
-El diagrama representa los dos modelos propios del módulo, con todos sus campos y tipos de Django. Se verificaron las columnas, claves y los índices contra SQLite. `envio_id` es la columna que Django crea para el campo `envio` de tipo `ForeignKey` y referencia a `core_envio.id`. La cardinalidad es **1 a 0..N**: un envío puede existir sin eventos o tener varios; cada evento requiere un envío.
-
-**Leyenda:** PK = clave primaria; FK = clave foránea; UQ = valor único; IDX = índice. Las tablas internas de usuarios, permisos y sesiones pertenecen a las aplicaciones estándar de Django.
-
-La migración `core/migrations/0001_initial.py` crea las tablas `core_envio` y `core_historialseguimiento`. Fue generada por Django y aplicada a la base local.
-La migración `0002_indexar_fecha_historial.py` agrega un índice a la fecha del historial para consultar sus últimos eventos con grandes volúmenes. Es una modificación real del modelo, registrada después de la migración inicial.
+Desde la carpeta principal del proyecto:
 
 ```powershell
-# Generar archivos cuando se crean o modifican modelos:
-.\venv\Scripts\python.exe bibliotecainacap\manage.py makemigrations core
-# Aplicar las migraciones existentes a la base local:
-.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
-# Comprobar cuáles están aplicadas; [X] indica aplicada:
-.\venv\Scripts\python.exe bibliotecainacap\manage.py showmigrations core
+.\venv\Scripts\activate
+cd .\bibliotecainacap
+python manage.py runserver 127.0.0.1:8000
 ```
 
-El archivo SQLite no se publica en GitHub: se reconstruye con las migraciones. La interfaz de U1 todavía consulta los ejemplos JSON.
+- Página: http://127.0.0.1:8000/
+- Administrador: http://127.0.0.1:8000/admin/
+- Para detener el servidor: `Ctrl+C`.
 
-## Evaluación 2 · Paso 2: Django Admin
+El administrador se abre directamente usando el superadministrador existente.
+`core/middleware.py` hace esto únicamente con `DEBUG=True` y una conexión local
+(`127.0.0.1` o `::1`). No elimina la contraseña guardada de la cuenta.
+Con `DEBUG=False` o desde otra dirección, Django solicita el inicio de sesión.
+Esta configuración es para la presentación local.
 
-El administrador está disponible en **http://127.0.0.1:8000/admin/** y requiere una cuenta de administrador. Los modelos se registran y configuran en `core/admin.py`.
+## Base de datos y modelos
 
-| Modelo | Columnas del listado | Filtros | Búsqueda |
-|---|---|---|---|
-| Envío | Código, destinatario, estado, prioridad y cliente | Estado y prioridad | Código, destinatario y correo del cliente |
-| Historial de seguimiento | Envío, estado, título y fecha | Estado | Código del envío y título |
+La conexión está en `bibliotecainacap/settings.py` y el archivo es `db.sqlite3`.
+Puedes abrirlo con SQLite DB Viewer.
 
-Cada listado muestra 25 registros por página. Al crear un evento de seguimiento, el campo de envío permite buscar por código. El administrador tiene el título Music Pro Courier y agrupa los modelos bajo Transporte y despachos.
+Los modelos están en `core/models.py`:
 
-Para crear una cuenta en otra instalación, después de ejecutar `migrate`:
+- **Envio:** código único, estado, destinatario, origen, destino, equipo, bultos,
+  peso, prioridad, conductor, patente, estimación de entrega y correo del cliente.
+- **HistorialSeguimiento:** envío, estado, título, nota y fecha del evento.
+
+Django crea la clave primaria `id` de cada modelo. `ForeignKey` relaciona cada
+evento con un envío; un envío puede tener varios eventos. `CASCADE` elimina sus
+eventos cuando se elimina el envío mediante Django. `__str__` define el texto con
+que aparece el registro. Los validadores impiden bultos o pesos menores al mínimo.
+
+![Diagrama de base de datos](diagrama_base_datos.png)
+
+[PNG para entregar](diagrama_base_datos.png) · [SVG editable](diagrama_base_datos.svg)
+
+## Migraciones
+
+- `0001_initial`: crea las tablas de envíos e historial y su relación.
+- `0002_indexar_fecha_historial`: agrega un índice a `fecha` para consultar los
+  últimos eventos sin ordenar toda la tabla cuando hay muchos registros.
+
+Desde la carpeta que contiene `manage.py`:
 
 ```powershell
-.\venv\Scripts\python.exe bibliotecainacap\manage.py createsuperuser
+python manage.py makemigrations
+python manage.py migrate
+python manage.py showmigrations
 ```
 
-El comando solicita el nombre de usuario, el correo y una contraseña. Las cuentas y contraseñas locales no se incluyen en el repositorio. Django guarda las contraseñas mediante hashes.
+`makemigrations` genera los archivos de cambios; `migrate` los aplica a SQLite;
+`showmigrations` muestra con `[X]` los que ya están aplicados.
+Las migraciones de `admin`, `auth`, `contenttypes` y `sessions` vienen con Django.
 
-Para demostrar el funcionamiento:
+## Django Admin
 
-1. Entra a `/admin/` con tu cuenta.
-2. En **Envíos**, presiona **Añadir** y completa los datos del despacho.
-3. Consulta el registro creado, modifica un campo y guarda.
-4. En **Historial de seguimiento**, añade un evento y selecciona el envío mediante la búsqueda.
-5. Usa los filtros y la barra de búsqueda para encontrar registros.
-6. Abre un registro de prueba y usa **Eliminar**, revisando la confirmación antes de borrarlo.
+`core/admin.py` registra los dos modelos y configura:
 
-Estas operaciones sí guardan los cambios en SQLite. Puedes comprobarlos abriendo `db.sqlite3` con SQLite DB Viewer. El estado actual del envío y sus eventos se administran de forma explícita: cambiar el estado no crea automáticamente un evento.
+- `list_display`: columnas del listado.
+- `list_filter`: filtros por estado y, en envíos, prioridad.
+- `search_fields`: campos de búsqueda.
+- `ordering`: orden de los registros.
+- `list_per_page`: 25 registros por página.
+- `autocomplete_fields`: búsqueda del envío al añadir un evento, sin cargar un
+  desplegable con un millón de opciones.
+- `list_select_related`: consulta el evento y su envío juntos.
 
-`settings.py` habilita las aplicaciones, sesiones, permisos y mensajes que necesita Django Admin; la ruta `/admin/` se declara en el `urls.py` del proyecto. Las migraciones de Django crean sus tablas de usuarios, permisos, sesiones y registro de acciones, además de las dos tablas de nuestros modelos.
+Para demostrar CRUD: añade un envío, búscalo, modifica un campo y elimínalo.
+También puedes añadir, consultar, modificar y eliminar eventos de seguimiento.
+Comprueba los cambios en SQLite DB Viewer. Cambiar el estado de un envío no crea
+un evento automáticamente: ambos registros se administran explícitamente.
 
-El panel `/panel/` sigue siendo la demostración JSON de U1. Los registros almacenados en SQLite se consultan y administran desde `/admin/`.
+## Datos ficticios con Faker
 
-## Evaluación 2 · Paso 3: datos ficticios con Faker
-
-El comando `generar_datos` está en `core/management/commands/generar_datos.py`. Recibe la cantidad de **envíos nuevos** y crea sus eventos de seguimiento. Se usa desde la terminal, en la carpeta que contiene `requirements.txt`.
+El comando está en `core/management/commands/generar_datos.py`.
+Ejecuta la cantidad que pida el profesor:
 
 ```powershell
-# Instalar las dependencias en otra instalación o al actualizar el proyecto:
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
-
-# Ejecutar una carga según la cantidad que solicite el docente:
-.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 100
-.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 1000
-.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 100000
-.\venv\Scripts\python.exe bibliotecainacap\manage.py generar_datos 1000000
+python manage.py generar_datos 100
+python manage.py generar_datos 1000
+python manage.py generar_datos 100000
+python manage.py generar_datos 1000000
 ```
 
-Cada ejecución **agrega** la cantidad indicada y conserva los registros anteriores. Ejecutar las cuatro cargas seguidas agrega 1.101.100 envíos. No hay una opción de borrado o reinicio de la base en este comando.
+Cada ejecución agrega envíos y entre uno y cuatro eventos por envío; conserva los
+registros anteriores. El comando muestra los totales guardados y un código de ejemplo.
 
-- Faker usa la configuración `es_CL` para generar nombres y direcciones ficticios. Los despachos reutilizan un catálogo de hasta 1.000 destinos y 20 conductores, como una operación con rutas recurrentes; no se generan un millón de clientes distintos.
-- Cada envío tiene un código único de ejemplo como `MP-XXXXXXXX-0000001`, carga positiva, estado y prioridad válidos. Los correos usan el dominio ficticio `musicpro.test`.
-- Cada envío recibe entre uno y cuatro eventos, desde **En bodega** hasta su estado actual. Por eso 100 envíos generan entre 100 y 400 registros de historial adicionales.
-- `bulk_create` guarda grupos de objetos. Solo se preparan 1.000 envíos y sus eventos a la vez para limitar el uso de memoria.
-- `transaction.atomic()` confirma la carga completa al finalizar. Si ocurre un error, sus inserciones se revierten y se conservan los datos anteriores.
-- Antes de confirmar, el comando cuenta los envíos y eventos guardados para esa carga y verifica que coincidan con las cantidades generadas. Al finalizar muestra los totales, el tiempo y un código de ejemplo.
+Faker genera nombres y direcciones con `es_CL`. Se reutilizan hasta 1.000 destinos
+y 20 conductores. Los códigos llevan un identificador de carga para evitar repetidos.
+`bulk_create` guarda por lotes de 1.000 para limitar la memoria.
+`transaction.atomic()` revierte la carga si ocurre un error. Al terminar se cuentan
+los registros de esa carga para verificar que se guardaron correctamente.
+Las cuatro cantidades se probaron en una base temporal separada de la base local.
 
-Para demostrarlo, ejecuta una carga, entra a **Admin → Envíos**, busca el código que imprimió el comando y consulta su historial. También puedes verificar los totales en SQLite DB Viewer:
+Para consultar los totales en SQLite DB Viewer:
 
 ```sql
 SELECT COUNT(*) FROM core_envio;
 SELECT COUNT(*) FROM core_historialseguimiento;
 ```
 
-La primera carga local contiene **100 envíos y 243 eventos**. Las pruebas de cargas mayores se ejecutan en una base temporal separada; los totales locales aumentarán cuando ejecutes más cargas o agregues registros desde Admin.
+## Interfaz de la Unidad 1
 
-Las cuatro cargas se verificaron en este computador con una base temporal SQLite y las migraciones aplicadas:
+Las páginas originales conservan los ocho ejemplos de `core/data/envios.json`.
+Sus formularios de acceso y registro son visuales. Crear un envío o actualizar su
+estado muestra una vista previa. Los cambios reales de la Unidad 2 se realizan
+en Django Admin y se guardan en SQLite. El diseño usa Bootstrap y CSS propio.
 
-| Envíos nuevos | Eventos generados | Tiempo medido |
-|---:|---:|---:|
-| 100 | 257 | 0,13 s |
-| 1.000 | 2.504 | 0,24 s |
-| 100.000 | 250.145 | 11,74 s |
-| 1.000.000 | 2.499.906 | 122,05 s |
+## Archivos para explicar
 
-Las pruebas acumularon 1.101.100 envíos y 2.752.812 eventos en la base temporal. `PRAGMA integrity_check` devolvió `ok` y `PRAGMA foreign_key_check` no encontró errores. La consulta de los últimos 25 eventos con su envío tardó 0,0022 s usando el índice de fecha. Después de verificar los resultados, se eliminó únicamente esa base temporal. Los tiempos y la cantidad de eventos varían según el equipo, los datos previos y los estados aleatorios generados.
+| Archivo | Función |
+|---|---|
+| `bibliotecainacap/settings.py` | Configura Django y SQLite. |
+| `bibliotecainacap/urls.py` | Conecta `/admin/` y las rutas del portal. |
+| `core/models.py` | Define los datos y su relación. |
+| `core/migrations/` | Conserva los cambios de la estructura. |
+| `core/admin.py` | Configura la administración de los registros. |
+| `core/middleware.py` | Permite el acceso directo al Admin en la presentación local. |
+| `core/management/commands/generar_datos.py` | Genera y guarda datos con Faker. |
+| `core/urls.py` y `core/views.py` | Rutas y vistas HTML de la Unidad 1. |
+| `core/services.py` | Lee y filtra los ejemplos JSON de la Unidad 1. |
 
-## Iniciar en este computador
+## Instalar en otro computador
 
-Abre la terminal de Visual Studio Code en la carpeta del proyecto y ejecuta:
-
-```powershell
-.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000 --noreload
-```
-
-Abre **http://127.0.0.1:8000/**. Mantén abierta la terminal; `Ctrl+C` detiene el servidor.Si modificas Python, detén y vuelve a iniciar el servidor.
-
-Para instalar en otro equipo con Python 3.12 o superior:
+Desde la carpeta principal, con Python 3.12 o superior:
 
 ```powershell
 python -m venv venv
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-.\venv\Scripts\python.exe bibliotecainacap\manage.py migrate
-.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver
+.\venv\Scripts\activate
+pip install -r requirements.txt
+cd .\bibliotecainacap
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py generar_datos 100
+python manage.py runserver 127.0.0.1:8000
 ```
 
+El superusuario debe existir para que funcione el acceso directo local.
+La base SQLite, las cuentas y las contraseñas no se publican en GitHub.
 
-Explicacion
+## Comprobar el proyecto
 
-
-1. Abre el inicio y presiona **Ingresar al portal**. Puedes dejar los campos vacíos: son visuales y no se validan credenciales.
-2. En el panel muestra los cuatro contadores, la tabla, los filtros y la segunda página de resultados.
-3. Busca `MP-2026-001` y explica sus etapas e historial. `MP-2026-004` es un ejemplo recibido.
-4. Usa **Nuevo envío**, completa datos ficticios y muestra su vista previa.
-5. Abre un envío en curso y usa **Actualizar estado** para ver cómo quedaría la siguiente etapa.
-6. Vuelve al panel: los ocho ejemplos originales permanecen iguales. Ninguna de las dos acciones guarda cambios.
-7. Exporta los resultados filtrados en JSON.
-
-El registro también es visual: envía un formulario y muestra una confirmación, pero no crea cuentas. Las fechas, personas y direcciones son ficticias; no hay GPS ni integración con entregas reales.
-
-
-
-**Framework CSS de esta versión:** Bootstrap local, junto a `portal.css`. La versión actual no carga Tailwind. Se conserva este diseño en la corrección.
-
-## Archivos principales
-
-```text
-bibliotecainacap/
-  manage.py
-  bibliotecainacap/
-    settings.py
-    urls.py
-  core/
-    urls.py
-    views.py
-    services.py
-    models.py
-    admin.py
-    migrations/0001_initial.py
-    migrations/0002_indexar_fecha_historial.py
-    management/commands/generar_datos.py
-    tests.py
-    data/envios.json
-    templates/core/
-      iniciar_sesion.html
-      registro_usuario.html
-      panel_envios.html
-      buscar_envio.html
-      detalle_envio.html
-      nuevo_envio.html
-      actualizar_estado.html
-      ayuda.html
-      error.html
-    static/core/
-      portal.css
-      portal.js
-      concierto.jpg
-      favicon.svg
-      vendor/
-```
-
-## Verificación y avances
+Desde la carpeta que contiene `manage.py`:
 
 ```powershell
-.\venv\Scripts\python.exe bibliotecainacap\manage.py check
-.\venv\Scripts\python.exe bibliotecainacap\manage.py test core
+python manage.py check
+python manage.py test core
 ```
 
-Las pruebas de modelos verifican el guardado, consulta, modificación, eliminación, código único y relación del historial. Se ejecutan en una base de prueba independiente, sin llenar ni modificar los registros de la base local.
-Las pruebas del administrador verifican el acceso, permisos, operaciones CRUD de ambos modelos, búsquedas, filtros, selección del envío y rechazo de datos inválidos.
-Las pruebas de generación verifican cargas que abarcan varios lotes, coherencia de los eventos, conservación de registros previos, códigos diferentes entre ejecuciones, cantidades inválidas y reversión ante un fallo.
-
+Las pruebas comprueban la navegación, los modelos, CRUD desde Admin, acceso local
+y generación de datos. Usan una base de prueba independiente de la base local.

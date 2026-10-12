@@ -2,7 +2,6 @@
 from math import isfinite
 
 from django.core.paginator import Paginator
-from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -139,17 +138,6 @@ def actualizar_estado(request, codigo):
         "envio": envio, "siguiente": siguiente, "error": error, "nota": nota,
         "pagina": "panel", "mostrar_menu": True,
     })
-
-
-def exportar_envios(request):
-    envios = filtrar_envios(cargar_envios(), request.GET.get("q", "").strip()[:100],
-                           request.GET.get("estado", ""))
-    respuesta = JsonResponse(
-        {"modo": "demostracion", "total": len(envios), "envios": envios},
-        json_dumps_params={"ensure_ascii": False, "indent": 2},
-    )
-    respuesta["Content-Disposition"] = 'attachment; filename="envios_music_pro.json"'
-    return respuesta
 
 
 def ayuda(request):

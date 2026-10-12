@@ -9,8 +9,6 @@
 <link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
 <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'core/portal.css' %}">
-<script src="{% static 'core/portal.js' %}" defer>
-</script>
 </head>
 <body class=" {% if mostrar_menu %} con-panel {% else %} publico {% endif %} ">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -96,7 +94,6 @@ Entregas completadas
 </h2>
 <p>{{ peso_total|floatformat:1 }} kg de equipos registrados en tu vista</p>
 </div>
-<a class="btn btn-secondary btn-sm" href="{% url 'core:exportar_envios' %}?q={{ q|urlencode }}&amp;estado={{ estado|urlencode }}">↓ Exportar JSON</a>
 </div>
 <form method="get" class="filter-bar">
 <div class="search-field">
