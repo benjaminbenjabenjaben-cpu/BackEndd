@@ -96,23 +96,26 @@ python manage.py generar_datos 1000000
 Cada ejecución agrega envíos y entre uno y cuatro eventos por envío; conserva los
 registros anteriores. El comando muestra los totales guardados y un código de ejemplo.
 
-El seeder sigue el estilo del ejercicio del profesor: `Faker("es_CL")`, un
-`for i in range(cantidad)` y `Envio.objects.create(...)` para guardar cada envío.
-Faker genera nombres, direcciones y correos ficticios. El código usa
-`fake.unique.random_int(...)`; `unique` evita repetir números dentro de esa
-ejecución y el modelo exige que el código sea único en la base de datos.
+El seeder usa `Faker("es_CL")` y guarda por lotes de 1.000 con `bulk_create()`
+para que las cargas de hasta un millón sean más rápidas. Prepara hasta 1.000
+destinos y 20 conductores ficticios, que se reutilizan entre los despachos.
+Cada carga lleva un identificador aleatorio y cada envío un número correlativo;
+el modelo exige que su código sea único en la base de datos.
 Los teléfonos se generan con `fake.numerify(text="+569########")`: el prefijo
 `+569` queda fijo y cada `#` se reemplaza por un dígito aleatorio. Se guardan como
-texto para conservar el signo `+`. `fake.random_int(min=1, max=100)` genera los
-bultos; `fake.pydecimal(...)` genera el peso con un decimal y
-`fake.random_element(...)` elige estados, prioridades y equipos.
-Otro `for` crea los eventos hasta el estado actual del envío usando
-`HistorialSeguimiento.objects.create(envio=envio, ...)`.
-`transaction.atomic()` confirma la carga al terminar o la revierte si hay un error.
-Esta versión inserta uno por uno; las cargas grandes tardan más que la versión
-anterior por lotes. Las pruebas comprueban 1.001 envíos y sus relaciones en una
-base independiente; el tiempo anterior de la carga del millón no corresponde
-a este seeder simplificado.
+texto para conservar el signo `+`. `fake.random_int(...)` genera los bultos,
+el peso y las fechas de prueba; `fake.random_element(...)` elige estados,
+prioridades y equipos. Los eventos se guardan también por lotes y se relacionan
+con el envío correspondiente. Solo se prepara un lote a la vez en memoria.
+`transaction.atomic()` confirma la carga completa al terminar o la revierte si
+hay un error. Antes de confirmar, el comando cuenta los registros de esa carga
+y verifica las cantidades. Espera el mensaje **Guardados y verificados** antes
+de consultar el administrador; SQLite puede bloquearlo durante la carga.
+
+Se comprobaron cargas de 100, 1.000, 100.000 y 1.000.000 de envíos en una base
+temporal. La carga del millón tardó 126,83 segundos y creó 2.500.254 eventos;
+la verificación de integridad y claves foráneas terminó correctamente.
+Los tiempos y el número de eventos varían según el equipo y los estados generados.
 
 Para consultar los totales en SQLite DB Viewer:
 
