@@ -41,7 +41,7 @@ que aparece el registro. Los validadores impiden bultos o pesos menores al míni
 
 ![Diagrama de base de datos](diagrama_base_datos.png)
 
-[PNG para entregar](diagrama_base_datos.png) · [SVG editable](diagrama_base_datos.svg)
+[PNG para entregar](diagrama_base_datos.png) · [Editable en draw.io](diagrama_base_datos.drawio) · [SVG](diagrama_base_datos.svg)
 
 ## Migraciones
 

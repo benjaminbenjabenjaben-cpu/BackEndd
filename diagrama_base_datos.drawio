@@ -1,0 +1,305 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="music-pro-bd" name="Base de datos">
+    <mxGraphModel dx="1280" dy="620" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1280" pageHeight="620">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Envio" value="" parent="1" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="50" y="70" width="480" height="456" />
+        </mxCell>
+        <mxCell id="Envio_encabezado_tabla" value="Envio" parent="Envio" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#e6e6e6;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;">
+          <mxGeometry as="geometry" x="0" y="0" width="480" height="36" />
+        </mxCell>
+        <mxCell id="Envio_cabecera" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="36" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cabecera_c0" value="Clave" parent="Envio_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cabecera_c1" value="Campo" parent="Envio_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cabecera_c2" value="Tipo (Django)" parent="Envio_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_id" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="64" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_id_c0" value="PK" parent="Envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_id_c1" value="id" parent="Envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_id_c2" value="BigAutoField" parent="Envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_codigo" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="92" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_codigo_c0" value="UQ" parent="Envio_codigo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_codigo_c1" value="codigo" parent="Envio_codigo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_codigo_c2" value="CharField(20)" parent="Envio_codigo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_estado" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="120" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_estado_c0" value="" parent="Envio_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_estado_c1" value="estado" parent="Envio_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_estado_c2" value="CharField(10)" parent="Envio_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destinatario" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="148" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destinatario_c0" value="" parent="Envio_destinatario" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destinatario_c1" value="destinatario" parent="Envio_destinatario" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destinatario_c2" value="CharField(80)" parent="Envio_destinatario" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_origen" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="176" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_origen_c0" value="" parent="Envio_origen" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_origen_c1" value="origen" parent="Envio_origen" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_origen_c2" value="CharField(150)" parent="Envio_origen" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destino" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="204" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destino_c0" value="" parent="Envio_destino" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destino_c1" value="destino" parent="Envio_destino" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_destino_c2" value="CharField(150)" parent="Envio_destino" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_equipo" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="232" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_equipo_c0" value="" parent="Envio_equipo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_equipo_c1" value="equipo" parent="Envio_equipo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_equipo_c2" value="CharField(120)" parent="Envio_equipo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_bultos" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="260" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_bultos_c0" value="" parent="Envio_bultos" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_bultos_c1" value="bultos" parent="Envio_bultos" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_bultos_c2" value="PositiveIntegerField" parent="Envio_bultos" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_peso" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="288" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_peso_c0" value="" parent="Envio_peso" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_peso_c1" value="peso" parent="Envio_peso" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_peso_c2" value="DecimalField(7, 1)" parent="Envio_peso" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_prioridad" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="316" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_prioridad_c0" value="" parent="Envio_prioridad" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_prioridad_c1" value="prioridad" parent="Envio_prioridad" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_prioridad_c2" value="CharField(6)" parent="Envio_prioridad" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_conductor" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="344" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_conductor_c0" value="" parent="Envio_conductor" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_conductor_c1" value="conductor" parent="Envio_conductor" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_conductor_c2" value="CharField(80)" parent="Envio_conductor" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_patente" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="372" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_patente_c0" value="" parent="Envio_patente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_patente_c1" value="patente" parent="Envio_patente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_patente_c2" value="CharField(12)" parent="Envio_patente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_eta" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="400" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_eta_c0" value="" parent="Envio_eta" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_eta_c1" value="eta" parent="Envio_eta" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_eta_c2" value="CharField(80)" parent="Envio_eta" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cliente" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="428" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cliente_c0" value="" parent="Envio_cliente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cliente_c1" value="cliente" parent="Envio_cliente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_cliente_c2" value="EmailField(254)" parent="Envio_cliente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento" value="" parent="1" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="750" y="70" width="480" height="232" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_encabezado_tabla" value="HistorialSeguimiento" parent="HistorialSeguimiento" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#e6e6e6;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;">
+          <mxGeometry as="geometry" x="0" y="0" width="480" height="36" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_cabecera" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="36" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_cabecera_c0" value="Clave" parent="HistorialSeguimiento_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_cabecera_c1" value="Campo" parent="HistorialSeguimiento_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_cabecera_c2" value="Tipo (Django)" parent="HistorialSeguimiento_cabecera" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#f2f2f2;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=1;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_id" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="64" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_id_c0" value="PK" parent="HistorialSeguimiento_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_id_c1" value="id" parent="HistorialSeguimiento_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_id_c2" value="BigAutoField" parent="HistorialSeguimiento_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_envio_id" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="92" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_envio_id_c0" value="FK" parent="HistorialSeguimiento_envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_envio_id_c1" value="envio_id" parent="HistorialSeguimiento_envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_envio_id_c2" value="ForeignKey(Envio)" parent="HistorialSeguimiento_envio_id" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_estado" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="120" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_estado_c0" value="" parent="HistorialSeguimiento_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_estado_c1" value="estado" parent="HistorialSeguimiento_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_estado_c2" value="CharField(10)" parent="HistorialSeguimiento_estado" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_titulo" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="148" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_titulo_c0" value="" parent="HistorialSeguimiento_titulo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_titulo_c1" value="titulo" parent="HistorialSeguimiento_titulo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_titulo_c2" value="CharField(120)" parent="HistorialSeguimiento_titulo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_nota" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="176" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_nota_c0" value="" parent="HistorialSeguimiento_nota" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_nota_c1" value="nota" parent="HistorialSeguimiento_nota" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_nota_c2" value="TextField" parent="HistorialSeguimiento_nota" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_fecha" value="" parent="HistorialSeguimiento" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="204" width="480" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_fecha_c0" value="" parent="HistorialSeguimiento_fecha" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_fecha_c1" value="fecha" parent="HistorialSeguimiento_fecha" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="HistorialSeguimiento_fecha_c2" value="DateTimeField" parent="HistorialSeguimiento_fecha" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="relacion" value="" edge="1" parent="1" source="Envio_id" target="HistorialSeguimiento_envio_id" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;strokeColor=#000000;strokeWidth=1.5;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="titulo" value="Music Pro Courier - Base de datos" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=20;fontStyle=1;">
+          <mxGeometry as="geometry" x="50" y="12" width="700" height="28" />
+        </mxCell>
+        <mxCell id="uno" value="1" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=14;fontStyle=0;">
+          <mxGeometry as="geometry" x="557" y="116.0" width="40" height="28" />
+        </mxCell>
+        <mxCell id="muchos" value="0..N" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=14;fontStyle=0;">
+          <mxGeometry as="geometry" x="690" y="144.0" width="52" height="28" />
+        </mxCell>
+        <mxCell id="descripcion" value="Un envío puede tener varios eventos. Cada evento pertenece a un solo envío." parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=15;fontStyle=0;">
+          <mxGeometry as="geometry" x="50" y="540" width="1150" height="28" />
+        </mxCell>
+        <mxCell id="leyenda" value="PK: clave primaria     FK: clave foránea     UQ: valor único" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=14;fontStyle=0;">
+          <mxGeometry as="geometry" x="50" y="572" width="1150" height="28" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
