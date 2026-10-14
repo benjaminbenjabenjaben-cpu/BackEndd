@@ -10,7 +10,7 @@ admin.site.index_title = "Administración de transporte y despachos"
 
 @admin.register(Envio)
 class EnvioAdmin(admin.ModelAdmin):
-    list_display = ("codigo", "destinatario", "estado", "prioridad", "cliente")
+    list_display = ("codigo", "destinatario", "telefono", "estado", "prioridad", "cliente")
     list_filter = ("estado", "prioridad")
     search_fields = ("codigo", "destinatario", "cliente")
     ordering = ("-id",)

@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" type="device">
   <diagram id="music-pro-bd" name="Base de datos">
-    <mxGraphModel dx="1280" dy="620" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1280" pageHeight="620">
+    <mxGraphModel dx="1280" dy="660" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1280" pageHeight="660">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="Envio" value="" parent="1" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="50" y="70" width="480" height="456" />
+          <mxGeometry as="geometry" x="50" y="70" width="480" height="484" />
         </mxCell>
         <mxCell id="Envio_encabezado_tabla" value="Envio" parent="Envio" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=#e6e6e6;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=18;fontStyle=1;">
           <mxGeometry as="geometry" x="0" y="0" width="480" height="36" />
@@ -71,8 +71,20 @@
         <mxCell id="Envio_destinatario_c2" value="CharField(80)" parent="Envio_destinatario" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
-        <mxCell id="Envio_origen" value="" parent="Envio" vertex="1" style="group;">
+        <mxCell id="Envio_telefono" value="" parent="Envio" vertex="1" style="group;">
           <mxGeometry as="geometry" x="0" y="176" width="480" height="28" />
+        </mxCell>
+        <mxCell id="Envio_telefono_c0" value="" parent="Envio_telefono" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
+        </mxCell>
+        <mxCell id="Envio_telefono_c1" value="telefono" parent="Envio_telefono" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="60" y="0" width="165" height="28" />
+        </mxCell>
+        <mxCell id="Envio_telefono_c2" value="CharField(12)" parent="Envio_telefono" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
+          <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
+        </mxCell>
+        <mxCell id="Envio_origen" value="" parent="Envio" vertex="1" style="group;">
+          <mxGeometry as="geometry" x="0" y="204" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_origen_c0" value="" parent="Envio_origen" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -84,7 +96,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_destino" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="204" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="232" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_destino_c0" value="" parent="Envio_destino" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -96,7 +108,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_equipo" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="232" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="260" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_equipo_c0" value="" parent="Envio_equipo" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -108,7 +120,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_bultos" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="260" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="288" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_bultos_c0" value="" parent="Envio_bultos" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -120,7 +132,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_peso" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="288" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="316" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_peso_c0" value="" parent="Envio_peso" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -132,7 +144,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_prioridad" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="316" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="344" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_prioridad_c0" value="" parent="Envio_prioridad" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -144,7 +156,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_conductor" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="344" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="372" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_conductor_c0" value="" parent="Envio_conductor" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -156,7 +168,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_patente" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="372" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="400" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_patente_c0" value="" parent="Envio_patente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -168,7 +180,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_eta" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="400" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="428" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_eta_c0" value="" parent="Envio_eta" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -180,7 +192,7 @@
           <mxGeometry as="geometry" x="225" y="0" width="255" height="28" />
         </mxCell>
         <mxCell id="Envio_cliente" value="" parent="Envio" vertex="1" style="group;">
-          <mxGeometry as="geometry" x="0" y="428" width="480" height="28" />
+          <mxGeometry as="geometry" x="0" y="456" width="480" height="28" />
         </mxCell>
         <mxCell id="Envio_cliente_c0" value="" parent="Envio_cliente" vertex="1" style="rounded=0;whiteSpace=wrap;html=0;fillColor=white;strokeColor=#000000;fontColor=#000000;fontFamily=Arial;fontSize=14;align=left;spacingLeft=8;fontStyle=0;">
           <mxGeometry as="geometry" x="0" y="0" width="60" height="28" />
@@ -294,10 +306,10 @@
           <mxGeometry as="geometry" x="690" y="144.0" width="52" height="28" />
         </mxCell>
         <mxCell id="descripcion" value="Un envío puede tener varios eventos. Cada evento pertenece a un solo envío." parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=15;fontStyle=0;">
-          <mxGeometry as="geometry" x="50" y="540" width="1150" height="28" />
+          <mxGeometry as="geometry" x="50" y="580" width="1150" height="28" />
         </mxCell>
         <mxCell id="leyenda" value="PK: clave primaria     FK: clave foránea     UQ: valor único" parent="1" vertex="1" style="text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#000000;fontFamily=Arial;fontSize=14;fontStyle=0;">
-          <mxGeometry as="geometry" x="50" y="572" width="1150" height="28" />
+          <mxGeometry as="geometry" x="50" y="612" width="1150" height="28" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -36,7 +36,8 @@ class Command(BaseCommand):
         # Distintos despachos pueden repetir cliente, destino y conductor.
         # Faker genera un catálogo acotado para no crear un millón de direcciones.
         destinos = [
-            (fake.company()[:80], fake.street_address()[:150], f"cliente{i}@musicpro.test")
+            (fake.company()[:80], fake.street_address()[:150],
+             f"cliente{i}@musicpro.test", fake.numerify(text="+569########"))
             for i in range(min(cantidad, 1000))
         ]
         conductores = [
@@ -52,12 +53,13 @@ class Command(BaseCommand):
                 hasta = min(desde + tamano_lote, cantidad)
                 envios = []
                 for numero in range(desde + 1, hasta + 1):
-                    destinatario, destino, cliente = fake.random_element(destinos)
+                    destinatario, destino, cliente, telefono = fake.random_element(destinos)
                     estado = fake.random_element(estados)
                     conductor, patente = fake.random_element(conductores)
                     envios.append(Envio(
                         codigo=f"{prefijo}-{numero:07d}", estado=estado,
-                        destinatario=destinatario, origen="Bodega Central · Quilicura",
+                        destinatario=destinatario, telefono=telefono,
+                        origen="Bodega Central · Quilicura",
                         destino=destino, equipo=fake.random_element(equipos),
                         bultos=fake.random_int(min=1, max=100),
                         peso=Decimal(fake.random_int(min=1, max=30000)) / Decimal("10"),

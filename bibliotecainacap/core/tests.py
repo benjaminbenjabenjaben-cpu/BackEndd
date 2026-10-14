@@ -298,6 +298,8 @@ class GeneracionDatosTests(TestCase):
         self.assertGreaterEqual(HistorialSeguimiento.objects.count(), 1001)
         self.assertLessEqual(HistorialSeguimiento.objects.count(), 4004)
         estados = [codigo for codigo, _ in ESTADOS]
+        for telefono in Envio.objects.values_list("telefono", flat=True):
+            self.assertRegex(telefono, r"^\+569[0-9]{8}$")
         for envio in Envio.objects.order_by("pk")[:10]:
             envio.full_clean()
             self.assertLessEqual(len(envio.codigo), 20)

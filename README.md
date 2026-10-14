@@ -30,7 +30,7 @@ Puedes abrirlo con SQLite DB Viewer.
 
 Los modelos están en `core/models.py`:
 
-- **Envio:** código único, estado, destinatario, origen, destino, equipo, bultos,
+- **Envio:** código único, estado, destinatario, teléfono de contacto, origen, destino, equipo, bultos,
   peso, prioridad, conductor, patente, estimación de entrega y correo del cliente.
 - **HistorialSeguimiento:** envío, estado, título, nota y fecha del evento.
 
@@ -48,6 +48,8 @@ que aparece el registro. Los validadores impiden bultos o pesos menores al míni
 - `0001_initial`: crea las tablas de envíos e historial y su relación.
 - `0002_indexar_fecha_historial`: agrega un índice a `fecha` para consultar los
   últimos eventos sin ordenar toda la tabla cuando hay muchos registros.
+- `0003_envio_telefono`: agrega el teléfono de contacto; los registros anteriores
+  conservan sus datos y quedan con el teléfono vacío.
 
 Desde la carpeta que contiene `manage.py`:
 
@@ -96,6 +98,10 @@ registros anteriores. El comando muestra los totales guardados y un código de e
 
 Faker genera nombres y direcciones con `es_CL`. Se reutilizan hasta 1.000 destinos
 y 20 conductores. Los códigos llevan un identificador de carga para evitar repetidos.
+Los teléfonos se generan con `fake.numerify(text="+569########")`: el prefijo
+`+569` queda fijo y cada `#` se reemplaza por un dígito aleatorio. Se guardan como
+texto para conservar el signo `+`. `fake.random_int(min=1, max=100)` genera los
+bultos, y también se usa para el peso y las fechas de prueba.
 `bulk_create` guarda por lotes de 1.000 para limitar la memoria.
 `transaction.atomic()` revierte la carga si ocurre un error. Al terminar se cuentan
 los registros de esa carga para verificar que se guardaron correctamente.

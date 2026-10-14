@@ -14,6 +14,7 @@ class Envio(models.Model):
     codigo = models.CharField("código", max_length=20, unique=True)
     estado = models.CharField(max_length=10, choices=ESTADOS, default="bodega")
     destinatario = models.CharField(max_length=80)
+    telefono = models.CharField("teléfono de contacto", max_length=12, blank=True)
     origen = models.CharField("origen", max_length=150)
     destino = models.CharField("dirección de destino", max_length=150)
     equipo = models.CharField("instrumentos o equipos", max_length=120)
