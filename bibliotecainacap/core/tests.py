@@ -291,10 +291,10 @@ class GeneracionDatosTests(TestCase):
         call_command("generar_datos", cantidad, stdout=salida)
         return salida.getvalue()
 
-    def test_carga_por_lotes_y_relaciones_coherentes(self):
+    def test_generacion_y_relaciones_coherentes(self):
         salida = self.generar(1001)
         self.assertEqual(Envio.objects.count(), 1001)
-        self.assertIn("Guardados y verificados: 1001 envíos", salida)
+        self.assertIn("Se crearon 1001 envíos", salida)
         self.assertGreaterEqual(HistorialSeguimiento.objects.count(), 1001)
         self.assertLessEqual(HistorialSeguimiento.objects.count(), 4004)
         estados = [codigo for codigo, _ in ESTADOS]
@@ -330,7 +330,7 @@ class GeneracionDatosTests(TestCase):
         envios_antes = Envio.objects.count()
         eventos_antes = HistorialSeguimiento.objects.count()
         with patch(
-            "core.management.commands.generar_datos.HistorialSeguimiento.objects.bulk_create",
+            "core.management.commands.generar_datos.HistorialSeguimiento.objects.create",
             side_effect=RuntimeError("Fallo simulado"),
         ):
             with self.assertRaises(RuntimeError):

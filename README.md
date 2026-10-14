@@ -96,16 +96,23 @@ python manage.py generar_datos 1000000
 Cada ejecución agrega envíos y entre uno y cuatro eventos por envío; conserva los
 registros anteriores. El comando muestra los totales guardados y un código de ejemplo.
 
-Faker genera nombres y direcciones con `es_CL`. Se reutilizan hasta 1.000 destinos
-y 20 conductores. Los códigos llevan un identificador de carga para evitar repetidos.
+El seeder sigue el estilo del ejercicio del profesor: `Faker("es_CL")`, un
+`for i in range(cantidad)` y `Envio.objects.create(...)` para guardar cada envío.
+Faker genera nombres, direcciones y correos ficticios. El código usa
+`fake.unique.random_int(...)`; `unique` evita repetir números dentro de esa
+ejecución y el modelo exige que el código sea único en la base de datos.
 Los teléfonos se generan con `fake.numerify(text="+569########")`: el prefijo
 `+569` queda fijo y cada `#` se reemplaza por un dígito aleatorio. Se guardan como
 texto para conservar el signo `+`. `fake.random_int(min=1, max=100)` genera los
-bultos, y también se usa para el peso y las fechas de prueba.
-`bulk_create` guarda por lotes de 1.000 para limitar la memoria.
-`transaction.atomic()` revierte la carga si ocurre un error. Al terminar se cuentan
-los registros de esa carga para verificar que se guardaron correctamente.
-Las cuatro cantidades se probaron en una base temporal separada de la base local.
+bultos; `fake.pydecimal(...)` genera el peso con un decimal y
+`fake.random_element(...)` elige estados, prioridades y equipos.
+Otro `for` crea los eventos hasta el estado actual del envío usando
+`HistorialSeguimiento.objects.create(envio=envio, ...)`.
+`transaction.atomic()` confirma la carga al terminar o la revierte si hay un error.
+Esta versión inserta uno por uno; las cargas grandes tardan más que la versión
+anterior por lotes. Las pruebas comprueban 1.001 envíos y sus relaciones en una
+base independiente; el tiempo anterior de la carga del millón no corresponde
+a este seeder simplificado.
 
 Para consultar los totales en SQLite DB Viewer:
 
