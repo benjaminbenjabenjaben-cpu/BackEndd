@@ -1,176 +1,148 @@
-# Music Pro Courier
+# Music Pro Courier — Evaluación 3
 
-Proyecto Django de Transporte y Despachos para la Evaluación 2.
-Usa SQLite, dos modelos relacionados, migraciones, Django Admin y Faker.
+Sistema de transporte construido con Django, formularios HTML y MySQL local.
+Las operaciones se realizan desde páginas propias: tipos de vehículo, vehículos,
+conductores, viajes, usuarios y diez reportes mediante Django ORM.
 
-## Iniciar la página
+## Iniciar en esta computadora
 
 Desde la carpeta principal del proyecto:
 
 ```powershell
-.\venv\Scripts\activate
-cd .\bibliotecainacap
-python manage.py runserver 127.0.0.1:8000
+.\.tools\iniciar_mysql.ps1
+.\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000
 ```
 
-- Página: http://127.0.0.1:8000/
-- Administrador: http://127.0.0.1:8000/admin/
-- Para detener el servidor: `Ctrl+C`.
+Abre http://127.0.0.1:8000/. Las credenciales iniciales de esta computadora están
+solo en `.tools/credenciales_e3.txt`, que no se publica en GitHub.
+`Ctrl+C` detiene Django. El administrador propio requiere iniciar sesión.
 
-El administrador se abre directamente usando el superadministrador existente.
-`core/middleware.py` hace esto únicamente con `DEBUG=True` y una conexión local
-(`127.0.0.1` o `::1`). No elimina la contraseña guardada de la cuenta.
-Con `DEBUG=False` o desde otra dirección, Django solicita el inicio de sesión.
-Esta configuración es para la presentación local.
+## Modelos y relaciones
 
-## Base de datos y modelos
+Los cuatro modelos de Transporte se definen en `core/models.py`, según el
+esquema entregado en el Word:
 
-La conexión está en `bibliotecainacap/settings.py` y el archivo es `db.sqlite3`.
-Puedes abrirlo con SQLite DB Viewer.
+- **TipoVehiculo:** nombre único y descripción.
+- **Vehiculo:** tipo, patente única, marca, modelo, año, disponibilidad y estado.
+- **Conductor:** RUT único, nombre, licencia, teléfono y estado activo.
+- **Viaje:** vehículo, conductor, origen, destino, salida, llegada, estado y observaciones.
 
-Los modelos están en `core/models.py`:
+Un tipo puede tener varios vehículos. Cada viaje pertenece a un vehículo y a un
+conductor. `ForeignKey` representa esas relaciones; `PROTECT` impide eliminar
+un registro que todavía es utilizado por otro. `__str__` define su nombre legible.
 
-- **Envio:** código único, estado, destinatario, teléfono de contacto, origen, destino, equipo, bultos,
-  peso, prioridad, conductor, patente, estimación de entrega y correo del cliente.
-- **HistorialSeguimiento:** envío, estado, título, nota y fecha del evento.
+Las migraciones anteriores de E2 se conservan y `0004_transporte` crea los
+cuatro modelos nuevos. El archivo SQLite de E2 permanece en esta computadora;
+la aplicación de E3 utiliza la base MySQL `music_pro_e3`.
 
-Django crea la clave primaria `id` de cada modelo. `ForeignKey` relaciona cada
-evento con un envío; un envío puede tener varios eventos. `CASCADE` elimina sus
-eventos cuando se elimina el envío mediante Django. `__str__` define el texto con
-que aparece el registro. Los validadores impiden bultos o pesos menores al mínimo.
+## Sesiones y permisos
 
-![Diagrama de base de datos](diagrama_base_datos.png)
+`core/views.py` usa `authenticate`, `login` y `logout`. Django guarda la sesión
+en la base de datos y la identifica mediante una cookie. El cierre se realiza
+con POST. `@login_required` protege las vistas; tras cerrar sesión no se puede
+acceder directamente a ellas por la URL.
 
-[PNG para entregar](diagrama_base_datos.png) · [Editable en draw.io](diagrama_base_datos.drawio) · [SVG](diagrama_base_datos.svg)
+Hay dos perfiles con grupos de Django:
 
-## Migraciones
-
-- `0001_initial`: crea las tablas de envíos e historial y su relación.
-- `0002_indexar_fecha_historial`: agrega un índice a `fecha` para consultar los
-  últimos eventos sin ordenar toda la tabla cuando hay muchos registros.
-- `0003_envio_telefono`: agrega el teléfono de contacto; los registros anteriores
-  conservan sus datos y quedan con el teléfono vacío.
-
-Desde la carpeta que contiene `manage.py`:
-
-```powershell
-python manage.py makemigrations
-python manage.py migrate
-python manage.py showmigrations
-```
-
-`makemigrations` genera los archivos de cambios; `migrate` los aplica a SQLite;
-`showmigrations` muestra con `[X]` los que ya están aplicados.
-Las migraciones de `admin`, `auth`, `contenttypes` y `sessions` vienen con Django.
-
-## Django Admin
-
-`core/admin.py` registra los dos modelos y configura:
-
-- `list_display`: columnas del listado.
-- `list_filter`: filtros por estado y, en envíos, prioridad.
-- `search_fields`: campos de búsqueda.
-- `ordering`: orden de los registros.
-- `list_per_page`: 25 registros por página.
-- `autocomplete_fields`: búsqueda del envío al añadir un evento, sin cargar un
-  desplegable con un millón de opciones.
-- `list_select_related`: consulta el evento y su envío juntos.
-
-Para demostrar CRUD: añade un envío, búscalo, modifica un campo y elimínalo.
-También puedes añadir, consultar, modificar y eliminar eventos de seguimiento.
-Comprueba los cambios en SQLite DB Viewer. Cambiar el estado de un envío no crea
-un evento automáticamente: ambos registros se administran explícitamente.
-
-## Datos ficticios con Faker
-
-El comando está en `core/management/commands/generar_datos.py`.
-Ejecuta la cantidad que pida el profesor:
-
-```powershell
-python manage.py generar_datos 100
-python manage.py generar_datos 1000
-python manage.py generar_datos 100000
-python manage.py generar_datos 1000000
-```
-
-Cada ejecución agrega envíos y entre uno y cuatro eventos por envío; conserva los
-registros anteriores. El comando muestra los totales guardados y un código de ejemplo.
-
-El seeder usa `Faker("es_CL")` y guarda por lotes de 1.000 con `bulk_create()`
-para que las cargas de hasta un millón sean más rápidas. Prepara hasta 1.000
-destinos y 20 conductores ficticios, que se reutilizan entre los despachos.
-Cada carga lleva un identificador aleatorio y cada envío un número correlativo;
-el modelo exige que su código sea único en la base de datos.
-Los teléfonos se generan con `fake.numerify(text="+569########")`: el prefijo
-`+569` queda fijo y cada `#` se reemplaza por un dígito aleatorio. Se guardan como
-texto para conservar el signo `+`. `fake.random_int(...)` genera los bultos,
-el peso y las fechas de prueba; `fake.random_element(...)` elige estados,
-prioridades y equipos. Los eventos se guardan también por lotes y se relacionan
-con el envío correspondiente. Solo se prepara un lote a la vez en memoria.
-`transaction.atomic()` confirma la carga completa al terminar o la revierte si
-hay un error. Antes de confirmar, el comando cuenta los registros de esa carga
-y verifica las cantidades. Espera el mensaje **Guardados y verificados** antes
-de consultar el administrador; SQLite puede bloquearlo durante la carga.
-
-Se comprobaron cargas de 100, 1.000, 100.000 y 1.000.000 de envíos en una base
-temporal. La carga del millón tardó 126,83 segundos y creó 2.500.254 eventos;
-la verificación de integridad y claves foráneas terminó correctamente.
-Los tiempos y el número de eventos varían según el equipo y los estados generados.
-
-Para consultar los totales en SQLite DB Viewer:
-
-```sql
-SELECT COUNT(*) FROM core_envio;
-SELECT COUNT(*) FROM core_historialseguimiento;
-```
-
-## Interfaz de la Unidad 1
-
-Las páginas originales conservan los ocho ejemplos de `core/data/envios.json`.
-Sus formularios de acceso y registro son visuales. Crear un envío o actualizar su
-estado muestra una vista previa. Los cambios reales de la Unidad 2 se realizan
-en Django Admin y se guardan en SQLite. El diseño usa Bootstrap y CSS propio.
-
-## Archivos para explicar
-
-| Archivo | Función |
+| Perfil | Acceso |
 |---|---|
-| `bibliotecainacap/settings.py` | Configura Django y SQLite. |
-| `bibliotecainacap/urls.py` | Conecta `/admin/` y las rutas del portal. |
-| `core/models.py` | Define los datos y su relación. |
-| `core/migrations/` | Conserva los cambios de la estructura. |
-| `core/admin.py` | Configura la administración de los registros. |
-| `core/middleware.py` | Permite el acceso directo al Admin en la presentación local. |
-| `core/management/commands/generar_datos.py` | Genera y guarda datos con Faker. |
-| `core/urls.py` y `core/views.py` | Rutas y vistas HTML de la Unidad 1. |
-| `core/services.py` | Lee y filtra los ejemplos JSON de la Unidad 1. |
+| Administrador | Consulta y CRUD de tipos, vehículos, conductores y viajes; crea, edita y desactiva usuarios. |
+| Operador | Consulta los listados y los diez reportes. |
+
+`core/decoradores.py` comprueba el perfil Administrador en el servidor.
+Ocultar botones no reemplaza esa comprobación. El superusuario tiene acceso
+administrativo. No se permite desactivar la propia cuenta ni el superusuario.
+Al crear usuarios se usa `set_password`, que guarda un hash de la contraseña.
+
+## Formularios y operaciones
+
+Los formularios se escriben en HTML y se procesan con `request.POST` en las
+vistas. No se utilizan `ModelForm` ni clases de formularios Django.
+`full_clean()` comprueba campos, tipos y valores únicos antes de guardar.
+Se valida también que la llegada no sea anterior a la salida.
+
+- Crear y modificar: formulario POST con `{% csrf_token %}` y `save()` del ORM.
+- Consultar: QuerySets del ORM y tablas HTML paginadas.
+- Eliminar: página de confirmación y borrado únicamente con POST.
+- Usuarios: alta, consulta, edición y desactivación desde el sistema propio.
+- Mensajes: confirmación o error después de cada operación.
+
+## Diez consultas ORM
+
+Se implementaron las consultas 1 a 10 del apartado Transporte del Word.
+Todas se muestran en `/reportes/` y respetan los permisos de sesión.
+
+| N.º | Reporte | ORM principal |
+|---|---|---|
+| 1 | Todos los vehículos registrados | `Vehiculo.objects.all()` |
+| 2 | Vehículos de un tipo seleccionado | `filter(tipo_vehiculo=tipo)` |
+| 3 | Vehículos disponibles | `filter(disponible=True)` |
+| 4 | Los diez vehículos más antiguos | `order_by("anio", "id")[:10]` |
+| 5 | Cantidad de conductores | `Conductor.objects.count()` |
+| 6 | Viajes de un vehículo | `filter(vehiculo=vehiculo)` |
+| 7 | Viajes de un conductor | `filter(conductor=conductor)` |
+| 8 | Cantidad de viajes por estado | `values("estado").annotate(total=Count("id"))` |
+| 9 | Viajes programados entre dos fechas | `filter(estado="programado", fecha_salida__gte=inicio, fecha_salida__lt=fin)` |
+| 10 | Vehículos sin viajes | `filter(viajes__isnull=True)` |
+
+El reporte 9 incluye el día inicial y el final del rango. Se filtra con fechas
+con zona horaria, sin necesitar tablas adicionales de zonas horarias en MySQL.
 
 ## Instalar en otro computador
 
-Desde la carpeta principal, con Python 3.12 o superior:
+Se necesita Python 3.12 o superior y MySQL local.
+[Descarga oficial de MySQL](https://dev.mysql.com/downloads/mysql/8.4.html?os=3).
 
 ```powershell
 python -m venv venv
-.\venv\Scripts\activate
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+En MySQL crea la base `music_pro_e3` con `utf8mb4` y un usuario con permisos sobre
+esa base. Copia `bibliotecainacap/mysql.cnf.example` como
+`bibliotecainacap/mysql.cnf` y completa los datos de conexión locales.
+Ese archivo contiene la contraseña y está ignorado por Git.
+
+```powershell
 cd .\bibliotecainacap
 python manage.py migrate
 python manage.py createsuperuser
-python manage.py generar_datos 100
-python manage.py runserver 127.0.0.1:8000
+python manage.py runserver
 ```
 
-El superusuario debe existir para que funcione el acceso directo local.
-La base SQLite, las cuentas y las contraseñas no se publican en GitHub.
+El superusuario puede iniciar sesión y crear las cuentas Administrador/Operador
+desde la sección Usuarios. Los grupos se crean al asignar el perfil.
 
-## Comprobar el proyecto
+## Comandos de comprobación
 
 Desde la carpeta que contiene `manage.py`:
 
 ```powershell
 python manage.py check
+python manage.py showmigrations core
+python manage.py makemigrations --check --dry-run
 python manage.py test core
 ```
 
-Las pruebas comprueban la navegación, los modelos, CRUD desde Admin, acceso local
-y generación de datos. Usan una base de prueba independiente de la base local.
+Las pruebas usan una base MySQL independiente llamada `test_music_pro_e3`.
+El usuario de conexión necesita permiso para crear y borrar esa base de pruebas.
+Se comprueban sesiones, permisos, CSRF, CRUD, usuarios y los diez reportes.
+También se mantienen las pruebas de los modelos y el generador de E2.
+
+## Archivos para explicar
+
+| Archivo | Función |
+|---|---|
+| `bibliotecainacap/settings.py` | Configuración de MySQL, sesiones y autenticación. |
+| `core/models.py` | Entidades y relaciones. |
+| `core/migrations/` | Historial de los cambios de estructura. |
+| `core/views.py` | Login/logout, CRUD, validaciones y consultas ORM. |
+| `core/decoradores.py` | Comprobación del perfil Administrador. |
+| `core/urls.py` | Rutas del sistema propio. |
+| `core/templates/core/` | Formularios y páginas HTML. |
+| `core/tests_e3.py` | Comprobación funcional de E3. |
+
+Los modelos `Envio` e `HistorialSeguimiento` y su generador pertenecen al avance
+E2; el sistema administrativo de esta entrega utiliza los cuatro modelos de
+Transporte descritos arriba.

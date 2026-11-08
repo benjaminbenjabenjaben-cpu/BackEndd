@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+<h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} usuario</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-md-6"><label class="form-label" for="username">Nombre de usuario</label><input class="form-control" id="username" name="username" value="{{ datos.username|default:'' }}" maxlength="150" autocomplete="off" required></div>
+    <div class="col-md-6"><label class="form-label" for="email">Correo electrónico</label><input class="form-control" type="email" id="email" name="email" value="{{ datos.email|default:'' }}" maxlength="254"></div>
+    <div class="col-md-6"><label class="form-label" for="first_name">Nombre</label><input class="form-control" id="first_name" name="first_name" value="{{ datos.first_name|default:'' }}" maxlength="150"></div>
+    <div class="col-md-6"><label class="form-label" for="last_name">Apellido</label><input class="form-control" id="last_name" name="last_name" value="{{ datos.last_name|default:'' }}" maxlength="150"></div>
+    <div class="col-md-6"><label class="form-label" for="rol">Perfil</label><select class="form-select" id="rol" name="rol" required>{% for rol in roles %}<option value="{{ rol }}" {% if datos.rol == rol or not datos.rol and rol_actual == rol %}selected{% endif %}>{{ rol }}</option>{% endfor %}</select></div>
+    {% if not objeto.pk %}
+    <div class="col-md-6"><label class="form-label" for="password1">Contraseña</label><input class="form-control" type="password" id="password1" name="password1" autocomplete="new-password" required></div>
+    <div class="col-md-6"><label class="form-label" for="password2">Repite la contraseña</label><input class="form-control" type="password" id="password2" name="password2" autocomplete="new-password" required></div>
+    {% endif %}
+    <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if datos.is_active %}checked{% endif %}><label class="form-check-label" for="is_active">Usuario activo</label></div></div>
+  </div>
+  <div class="mt-4"><button class="btn btn-primary" type="submit">Guardar</button><a class="btn btn-secondary" href="{% url 'core:usuarios' %}">Cancelar</a></div>
+</form>
+</section>
+{% endblock %}

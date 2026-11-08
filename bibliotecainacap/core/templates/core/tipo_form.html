@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+<h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} tipo de vehículo</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" value="{{ datos.nombre|default:'' }}" maxlength="80" required></div>
+  <div class="mb-4"><label class="form-label" for="descripcion">Descripción</label><textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ datos.descripcion|default:'' }}</textarea></div>
+  <button class="btn btn-primary" type="submit">Guardar</button><a class="btn btn-secondary" href="{% url 'core:tipos' %}">Cancelar</a>
+</form>
+</section>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Usuarios | Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-listado"><h1>Usuarios</h1><a class="btn btn-primary" href="{% url 'core:usuario_crear' %}">Crear usuario</a></div>
+<div class="tarjeta table-responsive">
+<table class="table align-middle">
+  <thead><tr><th scope="col">Usuario</th><th scope="col">Nombre</th><th scope="col">Correo</th><th scope="col">Perfil</th><th scope="col">Activo</th><th scope="col">Acciones</th></tr></thead>
+  <tbody>{% for usuario in usuarios %}<tr><td>{{ usuario.username }}</td><td>{{ usuario.get_full_name|default:'—' }}</td><td>{{ usuario.email|default:'—' }}</td><td>{% for grupo in usuario.groups.all %}{{ grupo.name }}{% if not forloop.last %}, {% endif %}{% empty %}{% if usuario.is_superuser %}Administrador{% else %}Sin perfil{% endif %}{% endfor %}</td><td>{{ usuario.is_active|yesno:'Sí,No' }}</td><td class="acciones"><a href="{% url 'core:usuario_editar' usuario.pk %}">Editar</a>{% if usuario.is_active %}<a class="text-danger" href="{% url 'core:usuario_desactivar' usuario.pk %}">Desactivar</a>{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No hay usuarios registrados.</td></tr>{% endfor %}</tbody>
+</table>
+{% if usuarios.has_other_pages %}<nav class="paginacion" aria-label="Páginas de usuarios">{% if usuarios.has_previous %}<a href="?pagina={{ usuarios.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ usuarios.number }} de {{ usuarios.paginator.num_pages }}</span>{% if usuarios.has_next %}<a href="?pagina={{ usuarios.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

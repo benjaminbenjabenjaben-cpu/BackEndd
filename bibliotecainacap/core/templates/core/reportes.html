@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Reportes | Music Pro{% endblock %}
+{% block contenido %}
+<h1>Reportes de transporte</h1>
+<p class="text-secondary">Selecciona una consulta y completa los filtros correspondientes.</p>
+<form method="get" class="tarjeta mb-4">
+  <div class="row g-3">
+    <div class="col-12"><label class="form-label" for="consulta">Consulta</label><select class="form-select" id="consulta" name="consulta">{% for valor, nombre in reportes %}<option value="{{ valor }}" {% if numero == valor %}selected{% endif %}>{{ valor }}. {{ nombre }}</option>{% endfor %}</select></div>
+    <div class="col-md-4"><label class="form-label" for="tipo">Tipo de vehículo</label><select class="form-select" id="tipo" name="tipo"><option value="">Todos</option>{% for tipo in tipos %}<option value="{{ tipo.pk }}" {% if filtros.tipo == tipo.pk|stringformat:'s' %}selected{% endif %}>{{ tipo.nombre }}</option>{% endfor %}</select></div>
+    <div class="col-md-4"><label class="form-label" for="vehiculo">Vehículo</label><select class="form-select" id="vehiculo" name="vehiculo"><option value="">Todos</option>{% for vehiculo in vehiculos %}<option value="{{ vehiculo.pk }}" {% if filtros.vehiculo == vehiculo.pk|stringformat:'s' %}selected{% endif %}>{{ vehiculo.patente }}</option>{% endfor %}</select></div>
+    <div class="col-md-4"><label class="form-label" for="conductor">Conductor</label><select class="form-select" id="conductor" name="conductor"><option value="">Todos</option>{% for conductor in conductores %}<option value="{{ conductor.pk }}" {% if filtros.conductor == conductor.pk|stringformat:'s' %}selected{% endif %}>{{ conductor.nombre }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label" for="desde">Desde</label><input class="form-control" type="date" id="desde" name="desde" value="{{ filtros.desde|default:'' }}"></div>
+    <div class="col-md-6"><label class="form-label" for="hasta">Hasta</label><input class="form-control" type="date" id="hasta" name="hasta" value="{{ filtros.hasta|default:'' }}"></div>
+  </div>
+  <button class="btn btn-primary mt-3" type="submit">Consultar</button>
+</form>
+<section class="tarjeta table-responsive">
+<h2>{{ numero }}. {{ titulo }}</h2>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<table class="table align-middle">
+  <thead><tr>{% for columna in columnas %}<th scope="col">{{ columna }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for fila in resultados %}<tr>{% for valor in fila %}<td>{{ valor|default_if_none:'—' }}</td>{% endfor %}</tr>{% empty %}<tr><td colspan="8">No hay resultados para esta consulta.</td></tr>{% endfor %}</tbody>
+</table>
+</section>
+{% endblock %}

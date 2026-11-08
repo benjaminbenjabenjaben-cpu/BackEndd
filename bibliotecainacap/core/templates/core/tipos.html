@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Tipos de vehículo | Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-listado"><h1>Tipos de vehículo</h1>{% if es_administrador %}<a class="btn btn-primary" href="{% url 'core:tipo_crear' %}">Crear tipo</a>{% endif %}</div>
+<div class="tarjeta table-responsive">
+<table class="table align-middle">
+  <thead><tr><th scope="col">Nombre</th><th scope="col">Descripción</th>{% if es_administrador %}<th scope="col">Acciones</th>{% endif %}</tr></thead>
+  <tbody>{% for tipo in tipos %}<tr><td>{{ tipo.nombre }}</td><td>{{ tipo.descripcion|default:'—' }}</td>{% if es_administrador %}<td class="acciones"><a href="{% url 'core:tipo_editar' tipo.pk %}">Editar</a><a class="text-danger" href="{% url 'core:tipo_eliminar' tipo.pk %}">Eliminar</a></td>{% endif %}</tr>{% empty %}<tr><td colspan="3">No hay tipos de vehículo registrados.</td></tr>{% endfor %}</tbody>
+</table>
+{% if tipos.has_other_pages %}<nav class="paginacion" aria-label="Páginas de tipos">{% if tipos.has_previous %}<a href="?pagina={{ tipos.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ tipos.number }} de {{ tipos.paginator.num_pages }}</span>{% if tipos.has_next %}<a href="?pagina={{ tipos.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-"""Configuración de Music Pro: interfaz U1 y base de datos SQLite para U2."""
+"""Configuración local del sistema de transporte de la Evaluación 3."""
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +8,6 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -22,7 +21,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "core.middleware.admin_local_sin_contrasena",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -40,8 +38,12 @@ TEMPLATES = [{
 WSGI_APPLICATION = "bibliotecainacap.wsgi.application"
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "music_pro_e3",
+        "OPTIONS": {
+            "read_default_file": str(BASE_DIR / "mysql.cnf"),
+            "charset": "utf8mb4",
+        },
     }
 }
 LANGUAGE_CODE = "es-cl"
@@ -49,3 +51,7 @@ TIME_ZONE = "America/Santiago"
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
+LOGIN_URL = "core:inicio"
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+]

@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Vehículos | Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-listado"><h1>Vehículos</h1>{% if es_administrador %}<a class="btn btn-primary" href="{% url 'core:vehiculo_crear' %}">Crear vehículo</a>{% endif %}</div>
+<div class="tarjeta table-responsive">
+<table class="table align-middle">
+  <thead><tr><th scope="col">Patente</th><th scope="col">Tipo</th><th scope="col">Marca y modelo</th><th scope="col">Año</th><th scope="col">Disponible</th><th scope="col">Estado</th>{% if es_administrador %}<th scope="col">Acciones</th>{% endif %}</tr></thead>
+  <tbody>{% for vehiculo in vehiculos %}<tr><td>{{ vehiculo.patente }}</td><td>{{ vehiculo.tipo_vehiculo.nombre }}</td><td>{{ vehiculo.marca }} {{ vehiculo.modelo }}</td><td>{{ vehiculo.anio }}</td><td>{{ vehiculo.disponible|yesno:'Sí,No' }}</td><td>{{ vehiculo.estado }}</td>{% if es_administrador %}<td class="acciones"><a href="{% url 'core:vehiculo_editar' vehiculo.pk %}">Editar</a><a class="text-danger" href="{% url 'core:vehiculo_eliminar' vehiculo.pk %}">Eliminar</a></td>{% endif %}</tr>{% empty %}<tr><td colspan="7">No hay vehículos registrados.</td></tr>{% endfor %}</tbody>
+</table>
+{% if vehiculos.has_other_pages %}<nav class="paginacion" aria-label="Páginas de vehículos">{% if vehiculos.has_previous %}<a href="?pagina={{ vehiculos.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ vehiculos.number }} de {{ vehiculos.paginator.num_pages }}</span>{% if vehiculos.has_next %}<a href="?pagina={{ vehiculos.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

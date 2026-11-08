@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+<h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} vehículo</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-md-6"><label class="form-label" for="tipo_vehiculo">Tipo de vehículo</label><select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" required><option value="">Selecciona un tipo</option>{% for tipo in tipos %}<option value="{{ tipo.pk }}" {% if datos.tipo_vehiculo|stringformat:'s' == tipo.pk|stringformat:'s' %}selected{% endif %}>{{ tipo.nombre }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label" for="patente">Patente</label><input class="form-control" id="patente" name="patente" value="{{ datos.patente|default:'' }}" maxlength="15" required></div>
+    <div class="col-md-6"><label class="form-label" for="marca">Marca</label><input class="form-control" id="marca" name="marca" value="{{ datos.marca|default:'' }}" maxlength="80" required></div>
+    <div class="col-md-6"><label class="form-label" for="modelo">Modelo</label><input class="form-control" id="modelo" name="modelo" value="{{ datos.modelo|default:'' }}" maxlength="80" required></div>
+    <div class="col-md-6"><label class="form-label" for="anio">Año</label><input class="form-control" type="number" id="anio" name="anio" value="{{ datos.anio|default:'' }}" step="1" required></div>
+    <div class="col-md-6"><label class="form-label" for="estado">Estado</label><input class="form-control" id="estado" name="estado" value="{{ datos.estado|default:'operativo' }}" maxlength="25" required></div>
+    <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="disponible" name="disponible" {% if datos.disponible %}checked{% endif %}><label class="form-check-label" for="disponible">Disponible</label></div></div>
+  </div>
+  <div class="mt-4"><button class="btn btn-primary" type="submit">Guardar</button><a class="btn btn-secondary" href="{% url 'core:vehiculos' %}">Cancelar</a></div>
+</form>
+</section>
+{% endblock %}

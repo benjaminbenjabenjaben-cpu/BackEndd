@@ -69,6 +69,10 @@ class Command(BaseCommand):
                         eta="Entregado" if estado == "recibido" else "Por programar",
                     ))
                 Envio.objects.bulk_create(envios, batch_size=tamano_lote)
+                # MySQL no devuelve los id al insertar por lotes: los consultamos.
+                if envios[0].pk is None:
+                    codigos = [envio.codigo for envio in envios]
+                    envios = list(Envio.objects.filter(codigo__in=codigos).order_by("codigo"))
 
                 eventos = []
                 for envio in envios:

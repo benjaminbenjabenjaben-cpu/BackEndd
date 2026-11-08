@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Viajes | Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-listado"><h1>Viajes</h1>{% if es_administrador %}<a class="btn btn-primary" href="{% url 'core:viaje_crear' %}">Crear viaje</a>{% endif %}</div>
+<div class="tarjeta table-responsive">
+<table class="table align-middle">
+  <thead><tr><th scope="col">Vehículo</th><th scope="col">Conductor</th><th scope="col">Recorrido</th><th scope="col">Salida</th><th scope="col">Llegada</th><th scope="col">Estado</th>{% if es_administrador %}<th scope="col">Acciones</th>{% endif %}</tr></thead>
+  <tbody>{% for viaje in viajes %}<tr><td>{{ viaje.vehiculo.patente }}</td><td>{{ viaje.conductor.nombre }}</td><td>{{ viaje.origen }} → {{ viaje.destino }}</td><td>{{ viaje.fecha_salida|date:'d/m/Y H:i' }}</td><td>{{ viaje.fecha_llegada|date:'d/m/Y H:i'|default:'—' }}</td><td>{{ viaje.get_estado_display }}</td>{% if es_administrador %}<td class="acciones"><a href="{% url 'core:viaje_editar' viaje.pk %}">Editar</a><a class="text-danger" href="{% url 'core:viaje_eliminar' viaje.pk %}">Eliminar</a></td>{% endif %}</tr>{% empty %}<tr><td colspan="7">No hay viajes registrados.</td></tr>{% endfor %}</tbody>
+</table>
+{% if viajes.has_other_pages %}<nav class="paginacion" aria-label="Páginas de viajes">{% if viajes.has_previous %}<a href="?pagina={{ viajes.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ viajes.number }} de {{ viajes.paginator.num_pages }}</span>{% if viajes.has_next %}<a href="?pagina={{ viajes.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

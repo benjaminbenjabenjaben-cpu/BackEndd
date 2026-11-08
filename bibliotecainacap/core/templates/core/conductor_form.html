@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+<h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} conductor</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-md-6"><label class="form-label" for="rut">RUT</label><input class="form-control" id="rut" name="rut" value="{{ datos.rut|default:'' }}" maxlength="20" required></div>
+    <div class="col-md-6"><label class="form-label" for="nombre">Nombre</label><input class="form-control" id="nombre" name="nombre" value="{{ datos.nombre|default:'' }}" maxlength="150" required></div>
+    <div class="col-md-6"><label class="form-label" for="licencia">Licencia</label><input class="form-control" id="licencia" name="licencia" value="{{ datos.licencia|default:'' }}" maxlength="30" required></div>
+    <div class="col-md-6"><label class="form-label" for="telefono">Teléfono</label><input class="form-control" type="tel" id="telefono" name="telefono" value="{{ datos.telefono|default:'' }}" maxlength="30"></div>
+    <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="activo" name="activo" {% if datos.activo %}checked{% endif %}><label class="form-check-label" for="activo">Activo</label></div></div>
+  </div>
+  <div class="mt-4"><button class="btn btn-primary" type="submit">Guardar</button><a class="btn btn-secondary" href="{% url 'core:conductores' %}">Cancelar</a></div>
+</form>
+</section>
+{% endblock %}

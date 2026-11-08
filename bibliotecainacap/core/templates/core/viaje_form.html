@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+<h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} viaje</h1>
+{% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-md-6"><label class="form-label" for="vehiculo">Vehículo</label><select class="form-select" id="vehiculo" name="vehiculo" required><option value="">Selecciona un vehículo</option>{% for vehiculo in vehiculos %}<option value="{{ vehiculo.pk }}" {% if datos.vehiculo|stringformat:'s' == vehiculo.pk|stringformat:'s' %}selected{% endif %}>{{ vehiculo.patente }} — {{ vehiculo.marca }} {{ vehiculo.modelo }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label" for="conductor">Conductor</label><select class="form-select" id="conductor" name="conductor" required><option value="">Selecciona un conductor</option>{% for conductor in conductores %}<option value="{{ conductor.pk }}" {% if datos.conductor|stringformat:'s' == conductor.pk|stringformat:'s' %}selected{% endif %}>{{ conductor.nombre }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label" for="origen">Origen</label><input class="form-control" id="origen" name="origen" value="{{ datos.origen|default:'' }}" maxlength="150" required></div>
+    <div class="col-md-6"><label class="form-label" for="destino">Destino</label><input class="form-control" id="destino" name="destino" value="{{ datos.destino|default:'' }}" maxlength="150" required></div>
+    <div class="col-md-6"><label class="form-label" for="fecha_salida">Fecha y hora de salida</label><input class="form-control" type="datetime-local" id="fecha_salida" name="fecha_salida" value="{{ datos.fecha_salida|default:'' }}" required></div>
+    <div class="col-md-6"><label class="form-label" for="fecha_llegada">Fecha y hora de llegada</label><input class="form-control" type="datetime-local" id="fecha_llegada" name="fecha_llegada" value="{{ datos.fecha_llegada|default:'' }}"></div>
+    <div class="col-md-6"><label class="form-label" for="estado">Estado</label><select class="form-select" id="estado" name="estado" required>{% for codigo, nombre in estados %}<option value="{{ codigo }}" {% if datos.estado == codigo %}selected{% endif %}>{{ nombre }}</option>{% endfor %}</select></div>
+    <div class="col-12"><label class="form-label" for="observaciones">Observaciones</label><textarea class="form-control" id="observaciones" name="observaciones" rows="3">{{ datos.observaciones|default:'' }}</textarea></div>
+  </div>
+  <div class="mt-4"><button class="btn btn-primary" type="submit">Guardar</button><a class="btn btn-secondary" href="{% url 'core:viajes' %}">Cancelar</a></div>
+</form>
+</section>
+{% endblock %}

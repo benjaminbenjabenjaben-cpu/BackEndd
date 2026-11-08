@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block titulo %}Conductores | Music Pro{% endblock %}
+{% block contenido %}
+<div class="titulo-listado"><h1>Conductores</h1>{% if es_administrador %}<a class="btn btn-primary" href="{% url 'core:conductor_crear' %}">Crear conductor</a>{% endif %}</div>
+<div class="tarjeta table-responsive">
+<table class="table align-middle">
+  <thead><tr><th scope="col">RUT</th><th scope="col">Nombre</th><th scope="col">Licencia</th><th scope="col">Teléfono</th><th scope="col">Activo</th>{% if es_administrador %}<th scope="col">Acciones</th>{% endif %}</tr></thead>
+  <tbody>{% for conductor in conductores %}<tr><td>{{ conductor.rut }}</td><td>{{ conductor.nombre }}</td><td>{{ conductor.licencia }}</td><td>{{ conductor.telefono|default:'—' }}</td><td>{{ conductor.activo|yesno:'Sí,No' }}</td>{% if es_administrador %}<td class="acciones"><a href="{% url 'core:conductor_editar' conductor.pk %}">Editar</a><a class="text-danger" href="{% url 'core:conductor_eliminar' conductor.pk %}">Eliminar</a></td>{% endif %}</tr>{% empty %}<tr><td colspan="6">No hay conductores registrados.</td></tr>{% endfor %}</tbody>
+</table>
+{% if conductores.has_other_pages %}<nav class="paginacion" aria-label="Páginas de conductores">{% if conductores.has_previous %}<a href="?pagina={{ conductores.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ conductores.number }} de {{ conductores.paginator.num_pages }}</span>{% if conductores.has_next %}<a href="?pagina={{ conductores.next_page_number }}">Siguiente</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

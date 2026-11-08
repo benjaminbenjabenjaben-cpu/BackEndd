@@ -1,0 +1,48 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Transporte | Music Pro{% endblock %}</title>
+  <link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'core/gestion.css' %}">
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#contenido">Ir al contenido</a>
+  <header class="cabecera">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <a class="marca" href="{% url 'core:panel' %}">Music Pro <span>Transporte</span></a>
+      {% if request.user.is_authenticated %}
+      <div class="d-flex align-items-center gap-3">
+        <span>{{ request.user.username }}</span>
+        <form method="post" action="{% url 'core:salir' %}">
+          {% csrf_token %}
+          <button class="btn btn-outline-light btn-sm" type="submit">Cerrar sesión</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+  {% if request.user.is_authenticated %}
+  <nav class="menu" aria-label="Menú principal">
+    <div class="container d-flex flex-wrap gap-1">
+      <a href="{% url 'core:panel' %}">Inicio</a>
+      <a href="{% url 'core:tipos' %}">Tipos de vehículo</a>
+      <a href="{% url 'core:vehiculos' %}">Vehículos</a>
+      <a href="{% url 'core:conductores' %}">Conductores</a>
+      <a href="{% url 'core:viajes' %}">Viajes</a>
+      {% if es_administrador %}<a href="{% url 'core:usuarios' %}">Usuarios</a>{% endif %}
+      <a href="{% url 'core:reportes' %}">Reportes</a>
+    </div>
+  </nav>
+  {% endif %}
+  <main class="container py-4" id="contenido">
+    {% for mensaje in messages %}
+      <div class="alert {% if mensaje.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">{{ mensaje }}</div>
+    {% endfor %}
+    {% block contenido %}{% endblock %}
+  </main>
+</body>
+</html>

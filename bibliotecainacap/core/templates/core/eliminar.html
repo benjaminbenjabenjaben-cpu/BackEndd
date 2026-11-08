@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block contenido %}
+<section class="tarjeta formulario">
+  <h1>{{ accion|default:'Eliminar' }} registro</h1>
+  <p>¿Confirmas que deseas {{ accion|default:'eliminar'|lower }} este registro?</p>
+  <p><strong>{{ objeto }}</strong></p>
+  {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Confirmar {{ accion|default:'eliminación'|lower }}</button>
+    <a class="btn btn-secondary" href="{% url volver %}">Cancelar</a>
+  </form>
+</section>
+{% endblock %}
