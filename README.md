@@ -31,9 +31,14 @@ Un tipo puede tener varios vehículos. Cada viaje pertenece a un vehículo y a u
 conductor. `ForeignKey` representa esas relaciones; `PROTECT` impide eliminar
 un registro que todavía es utilizado por otro. `__str__` define su nombre legible.
 
-Las migraciones anteriores de E2 se conservan y `0004_transporte` crea los
-cuatro modelos nuevos. El archivo SQLite de E2 permanece en esta computadora;
-la aplicación de E3 utiliza la base MySQL `music_pro_e3`.
+La base MySQL `music_pro_e3` contiene únicamente los cuatro modelos del caso,
+además de las tablas internas de usuarios y sesiones de Django. Las tablas
+`core_tipovehiculo`, `core_vehiculo`, `core_conductor` y `core_viaje` llevan el
+prefijo `core_` porque ese es el nombre de la aplicación Django.
+
+Se conserva el historial de migraciones ya aplicado. `0004_transporte` creó
+estas entidades y `0005_solo_transporte` retiró las tablas heredadas de Envío e
+Historial. El archivo SQLite anterior se conserva fuera de la conexión actual.
 
 ## Sesiones y permisos
 
@@ -88,6 +93,15 @@ Todas se muestran en `/reportes/` y respetan los permisos de sesión.
 El reporte 9 incluye el día inicial y el final del rango. Se filtra con fechas
 con zona horaria, sin necesitar tablas adicionales de zonas horarias en MySQL.
 
+## Consultas externas en SQL
+
+`consultas_transporte.sql` contiene las mismas diez consultas en SQL de MySQL,
+para ejecutarlas desde una herramienta externa conectada a `music_pro_e3`.
+Las consultas SQL no se ejecutan desde las vistas: la página Reportes continúa
+utilizando exclusivamente el ORM de Django.
+
+[Pasos para ejecutar las consultas externas](GUIA_SQL_EXTERNO.md).
+
 ## Instalar en otro computador
 
 Se necesita Python 3.12 o superior y MySQL local.
@@ -128,7 +142,7 @@ python manage.py test core
 Las pruebas usan una base MySQL independiente llamada `test_music_pro_e3`.
 El usuario de conexión necesita permiso para crear y borrar esa base de pruebas.
 Se comprueban sesiones, permisos, CSRF, CRUD, usuarios y los diez reportes.
-También se mantienen las pruebas de los modelos y el generador de E2.
+Las 19 pruebas corresponden al sistema de Transporte de esta evaluación.
 
 ## Archivos para explicar
 
@@ -142,7 +156,3 @@ También se mantienen las pruebas de los modelos y el generador de E2.
 | `core/urls.py` | Rutas del sistema propio. |
 | `core/templates/core/` | Formularios y páginas HTML. |
 | `core/tests_e3.py` | Comprobación funcional de E3. |
-
-Los modelos `Envio` e `HistorialSeguimiento` y su generador pertenecen al avance
-E2; el sistema administrativo de esta entrega utiliza los cuatro modelos de
-Transporte descritos arriba.
