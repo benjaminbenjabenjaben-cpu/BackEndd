@@ -78,7 +78,7 @@ h2 { font-size: 19px; font-weight: 700; letter-spacing: -.4px; margin-bottom: 16
 .titulo-tarjeta { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; margin: 0 0 18px; color: #15243c; letter-spacing: -.35px; }
 .titulo-tarjeta .icono { width: 22px; height: 22px; color: var(--azul); }
 .grafico-donut { display: flex; gap: 18px; align-items: center; min-height: 204px; }
-.grafico-donut svg { width: 51%; max-width: 190px; flex-shrink: 0; overflow: visible; }
+.grafico-donut > svg { width: 51%; max-width: 190px; flex-shrink: 0; overflow: visible; }
 .leyenda-estados { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; font-size: 11px; }
 .leyenda-estados li { display: flex; align-items: center; gap: 7px; }
 .leyenda-estados .punto, .leyenda-estados .muestra, .punto-leyenda { display: inline-block; width: 10px; height: 10px; flex-shrink: 0; border-radius: 3px; }
@@ -141,7 +141,7 @@ tr:nth-child(3) .ranking-puesto, .puesto-3 { color: #8f5126; background: #ffd3b6
   .resumen-tarjetas, .resumen-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .panel-graficos, .graficos-panel { grid-template-columns: minmax(0, 1fr); }
   .grafico-donut { justify-content: center; }
-  .grafico-donut svg { width: 180px; }
+  .grafico-donut > svg { width: 180px; }
   .leyenda-estados { font-size: 12px; gap: 15px; }
   .grafico-svg { max-height: 240px; }
   .panel-tablas, .fila-inferior-panel { grid-template-columns: minmax(0, 1fr); }

@@ -39,7 +39,12 @@
     <div class="grafico-donut">
       <svg id="grafico-estados" viewBox="0 0 190 190" role="img" aria-label="Distribución de viajes por estado"></svg>
       <ul class="leyenda-estados">
-        {% for estado in estados %}<li title="{{ estado.total }} viajes"><span class="punto-leyenda" style="background:{{ estado.color }}" aria-hidden="true"></span><span>{{ estado.nombre }} <strong>({{ estado.porcentaje|floatformat:0 }} %)</strong></span></li>{% endfor %}
+        {% for estado in estados %}
+        <li title="{{ estado.total }} viajes">
+          <svg class="punto-leyenda" viewBox="0 0 10 10" aria-hidden="true"><rect width="10" height="10" rx="3" fill="{{ estado.color }}"></rect></svg>
+          <span>{{ estado.nombre }} <strong>({{ estado.porcentaje|floatformat:0 }} %)</strong></span>
+        </li>
+        {% endfor %}
       </ul>
     </div>
   </article>
