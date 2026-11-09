@@ -78,6 +78,14 @@ Hay dos perfiles con grupos de Django:
 Ocultar botones no reemplaza esa comprobación. El superusuario tiene acceso
 administrativo. No se permite desactivar la propia cuenta ni el superusuario.
 Al crear usuarios se usa `set_password`, que guarda un hash de la contraseña.
+Las cuentas actuales utilizan PBKDF2-SHA256: la base no guarda la contraseña
+original. El archivo de conexión `mysql.cnf` y la clave interna `.secret_key`
+son privados y están excluidos de Git; esos archivos locales son texto legible.
+Al crear cuentas se aplican los validadores de contraseña de Django: longitud
+mínima, similitud con datos del usuario, contraseñas comunes y solo numéricas.
+La clave interna de Django se genera aleatoriamente una vez y se conserva.
+Esta configuración está preparada para la evaluación local en HTTP, con
+`DEBUG=True`; no corresponde a una publicación en Internet.
 
 ## Formularios y operaciones
 
@@ -147,6 +155,7 @@ Ese archivo contiene la contraseña y está ignorado por Git.
 
 ```powershell
 cd .\bibliotecainacap
+python -c "from pathlib import Path; from secrets import token_urlsafe; Path('.secret_key').write_text(token_urlsafe(64), encoding='utf-8')"
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
@@ -154,6 +163,8 @@ python manage.py runserver
 
 El superusuario puede iniciar sesión y crear las cuentas Administrador/Operador
 desde la sección Usuarios. Los grupos se crean al asignar el perfil.
+Genera `.secret_key` únicamente en la instalación inicial: reemplazarla invalida
+las sesiones anteriores y exige iniciar sesión nuevamente.
 
 ## Comandos de comprobación
 
@@ -171,6 +182,8 @@ El usuario de conexión necesita permiso para crear y borrar esa base de pruebas
 Se comprueban sesiones, permisos, CSRF, CRUD, usuarios y los diez reportes.
 Las pruebas incluyen el sistema administrativo y su conexión con el seguimiento
 público del cliente.
+
+[Revisión final de la pauta y demostración para la evaluación](REVISION_E3.md).
 
 ## Archivos para explicar
 

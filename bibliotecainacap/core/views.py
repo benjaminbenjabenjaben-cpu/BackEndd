@@ -18,6 +18,7 @@ from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.debug import sensitive_post_parameters
 
 from .decoradores import administrador_requerido, es_administrador
 from .models import Conductor, TipoVehiculo, Vehiculo, Viaje
@@ -106,6 +107,7 @@ def detalle_envio(request, codigo):
 
 
 @never_cache
+@sensitive_post_parameters("password")
 def inicio(request):
     if request.user.is_authenticated:
         return redirect("core:panel")
@@ -351,6 +353,7 @@ def usuarios(request):
 
 @login_required
 @administrador_requerido
+@sensitive_post_parameters("password1", "password2")
 def usuario_guardar(request, pk=None):
     objeto = get_object_or_404(Usuario, pk=pk) if pk else Usuario()
     rol_actual = "Administrador" if objeto.pk and es_administrador(objeto) else "Operador"

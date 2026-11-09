@@ -2,8 +2,8 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Clave estable para desarrollo local; permite conservar las sesiones al reiniciar.
-SECRET_KEY = "django-insecure-music-pro-desarrollo-local-u2"
+# Clave privada estable, generada localmente y excluida de Git.
+SECRET_KEY = (BASE_DIR / ".secret_key").read_text(encoding="utf-8").strip()
 DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
@@ -53,5 +53,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 LOGIN_URL = "core:inicio"
 AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
