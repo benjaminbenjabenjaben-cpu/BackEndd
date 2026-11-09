@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block titulo %}Reportes de Transporte | Music Pro{% endblock %}
+{% block pagina_titulo %}Reportes de Transporte{% endblock %}
+{% block pagina_subtitulo %}Control de vehículos, conductores y viajes{% endblock %}
+{% block controles_cabecera %}
+<form method="get" class="filtro-periodo">
+  <svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#calendario"></use></svg>
+  <label for="periodo">Período:</label>
+  <select id="periodo" name="periodo" class="form-select form-select-sm" onchange="this.form.submit()">
+    {% for valor, nombre in periodos %}<option value="{{ valor }}" {% if periodo == valor|stringformat:'s' %}selected{% endif %}>{{ nombre }}</option>{% endfor %}
+  </select>
+  <noscript><button class="btn btn-primary btn-sm" type="submit">Aplicar</button></noscript>
+</form>
+{% endblock %}
+{% block contenido %}
+<section class="resumen-tarjetas" aria-label="Resumen de transporte">
+  <a class="resumen-tarjeta azul resumen-enlace" href="{% url 'core:vehiculos' %}">
+    <span class="resumen-icono"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#vehiculo"></use></svg></span>
+    <div><h2 class="resumen-etiqueta">Vehículos registrados</h2><strong class="resumen-cifra">{{ totales.vehiculos }}</strong><p class="resumen-nota">Flota registrada en el sistema</p></div>
+  </a>
+  <a class="resumen-tarjeta morado resumen-enlace" href="{% url 'core:conductores' %}">
+    <span class="resumen-icono"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#conductor"></use></svg></span>
+    <div><h2 class="resumen-etiqueta">Conductores registrados</h2><strong class="resumen-cifra">{{ totales.conductores }}</strong><p class="resumen-nota">Conductores de la empresa</p></div>
+  </a>
+  <a class="resumen-tarjeta verde resumen-enlace" href="{% url 'core:viajes' %}">
+    <span class="resumen-icono"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#viaje"></use></svg></span>
+    <div><h2 class="resumen-etiqueta">Viajes realizados</h2><strong class="resumen-cifra">{{ totales.realizados }}</strong><p class="resumen-nota">Finalizados en el período</p></div>
+  </a>
+  <a class="resumen-tarjeta ambar resumen-enlace" href="{% url 'core:viajes' %}">
+    <span class="resumen-icono"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#reloj"></use></svg></span>
+    <div><h2 class="resumen-etiqueta">Viajes programados</h2><strong class="resumen-cifra">{{ totales.programados }}</strong><p class="resumen-nota">Con salida en el período</p></div>
+  </a>
+</section>
+
+<section class="panel-graficos" aria-label="Gráficos de transporte del período">
+  <article class="grafico-tarjeta">
+    <h2 class="titulo-tarjeta">Viajes por estado</h2>
+    <div class="grafico-donut">
+      <svg id="grafico-estados" viewBox="0 0 190 190" role="img" aria-label="Distribución de viajes por estado"></svg>
+      <ul class="leyenda-estados">
+        {% for estado in estados %}<li title="{{ estado.total }} viajes"><span class="punto-leyenda" style="background:{{ estado.color }}" aria-hidden="true"></span><span>{{ estado.nombre }} <strong>({{ estado.porcentaje|floatformat:0 }} %)</strong></span></li>{% endfor %}
+      </ul>
+    </div>
+  </article>
+  <article class="grafico-tarjeta">
+    <h2 class="titulo-tarjeta">Viajes por tipo de vehículo</h2>
+    <div class="grafico-desplazable"><svg id="grafico-tipos" class="grafico-svg" viewBox="0 0 380 220" role="img" aria-label="Cantidad de viajes por tipo de vehículo"></svg></div>
+  </article>
+  <article class="grafico-tarjeta">
+    <h2 class="titulo-tarjeta">Evolución de viajes</h2>
+    <svg id="grafico-evolucion" class="grafico-svg" viewBox="0 0 460 220" role="img" aria-label="Cantidad diaria de viajes del período seleccionado"></svg>
+  </article>
+</section>
+
+<section class="panel-tablas" aria-label="Conductores y últimos viajes del período">
+  <article class="grafico-tarjeta">
+    <h2 class="titulo-tarjeta"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#trofeo"></use></svg>Top 5 conductores con más viajes</h2>
+    <div class="table-responsive">
+      <table class="table tabla-panel align-middle">
+        <thead><tr><th scope="col">#</th><th scope="col">Conductor</th><th scope="col">Viajes</th><th scope="col">Participación</th></tr></thead>
+        <tbody>{% for conductor in top_conductores %}<tr><td><span class="ranking-puesto puesto-{{ forloop.counter }}">{{ forloop.counter }}</span></td><td>{{ conductor.nombre }}</td><td>{{ conductor.total }}</td><td>{{ conductor.participacion|floatformat:1 }} %</td></tr>{% empty %}<tr><td colspan="4" class="tabla-vacia">No hay viajes en este período.</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </article>
+  <article class="grafico-tarjeta">
+    <h2 class="titulo-tarjeta"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#calendario"></use></svg>Últimos viajes registrados</h2>
+    <div class="table-responsive">
+      <table class="table tabla-panel align-middle">
+        <thead><tr><th scope="col">N.º viaje</th><th scope="col">Vehículo</th><th scope="col">Conductor</th><th scope="col">Origen</th><th scope="col">Destino</th><th scope="col">Fecha</th><th scope="col">Estado</th></tr></thead>
+        <tbody>{% for viaje in ultimos_viajes %}<tr><td>VJ-{{ viaje.pk|stringformat:'04d' }}</td><td>{{ viaje.vehiculo.patente }}</td><td>{{ viaje.conductor.nombre }}</td><td>{{ viaje.origen }}</td><td>{{ viaje.destino }}</td><td>{{ viaje.fecha_salida|date:'d/m/Y' }}</td><td><span class="estado-viaje estado-{{ viaje.estado }}">{{ viaje.get_estado_display }}</span></td></tr>{% empty %}<tr><td colspan="7" class="tabla-vacia">No hay viajes en este período.</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </article>
+</section>
+<div class="pie-panel"><span>Los viajes se filtran por su fecha de salida.</span><a href="{% url 'core:reportes' %}">Ver las 10 consultas de transporte <span aria-hidden="true">→</span></a></div>
+{{ estados|json_script:'datos-estados' }}
+{{ por_tipo|json_script:'datos-tipos' }}
+{{ evolucion|json_script:'datos-evolucion' }}
+{% endblock %}
+{% block scripts %}<script src="{% static 'core/panel.js' %}" defer></script>{% endblock %}

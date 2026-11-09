@@ -9,41 +9,52 @@
   <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'core/gestion.css' %}">
 </head>
-<body>
-  <a class="visually-hidden-focusable" href="#contenido">Ir al contenido</a>
-  <header class="cabecera">
-    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
-      <a class="marca" href="{% url 'core:panel' %}">Music Pro <span>Transporte</span></a>
-      {% if request.user.is_authenticated %}
-      <div class="d-flex align-items-center gap-3">
-        <span>{{ request.user.username }}</span>
-        <a class="text-white" href="{% url 'core:portal' %}">Ver sitio del cliente</a>
-        <form method="post" action="{% url 'core:salir' %}">
-          {% csrf_token %}
-          <button class="btn btn-outline-light btn-sm" type="submit">Cerrar sesión</button>
-        </form>
-      </div>
-      {% endif %}
-    </div>
-  </header>
+<body class="{% if request.user.is_authenticated %}administracion{% else %}pantalla-acceso{% endif %}">
+  <a class="visually-hidden-focusable salto-contenido" href="#contenido">Ir al contenido</a>
   {% if request.user.is_authenticated %}
-  <nav class="menu" aria-label="Menú principal">
-    <div class="container d-flex flex-wrap gap-1">
-      <a href="{% url 'core:panel' %}">Inicio</a>
-      <a href="{% url 'core:tipos' %}">Tipos de vehículo</a>
-      <a href="{% url 'core:vehiculos' %}">Vehículos</a>
-      <a href="{% url 'core:conductores' %}">Conductores</a>
-      <a href="{% url 'core:viajes' %}">Viajes</a>
-      {% if es_administrador %}<a href="{% url 'core:usuarios' %}">Usuarios</a>{% endif %}
-      <a href="{% url 'core:reportes' %}">Reportes</a>
+  <aside class="barra-lateral">
+    <a class="marca-sistema" href="{% url 'core:panel' %}">
+      <svg class="icono icono-marca" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#camion"></use></svg>
+      <span>Sistema de<br>Transporte</span>
+    </a>
+    {% with ruta=request.resolver_match.url_name %}
+    <nav class="menu-lateral" aria-label="Menú principal">
+      <a href="{% url 'core:panel' %}" {% if ruta == 'panel' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#inicio"></use></svg><span>Inicio</span></a>
+      <a href="{% url 'core:reportes' %}" {% if ruta == 'reportes' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#reportes"></use></svg><span>Reportes</span></a>
+      <a href="{% url 'core:vehiculos' %}" {% if ruta == 'vehiculos' or ruta == 'vehiculo_crear' or ruta == 'vehiculo_editar' or ruta == 'vehiculo_eliminar' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#vehiculo"></use></svg><span>Vehículos</span></a>
+      <a href="{% url 'core:conductores' %}" {% if ruta == 'conductores' or ruta == 'conductor_crear' or ruta == 'conductor_editar' or ruta == 'conductor_eliminar' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#conductor"></use></svg><span>Conductores</span></a>
+      <a href="{% url 'core:viajes' %}" {% if ruta == 'viajes' or ruta == 'viaje_crear' or ruta == 'viaje_editar' or ruta == 'viaje_eliminar' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#viaje"></use></svg><span>Viajes</span></a>
+      <a href="{% url 'core:tipos' %}" {% if ruta == 'tipos' or ruta == 'tipo_crear' or ruta == 'tipo_editar' or ruta == 'tipo_eliminar' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#tipo"></use></svg><span>Tipos de vehículo</span></a>
+      {% if es_administrador %}<a href="{% url 'core:usuarios' %}" {% if ruta == 'usuarios' or ruta == 'usuario_crear' or ruta == 'usuario_editar' or ruta == 'usuario_desactivar' %}class="activo" aria-current="page"{% endif %}><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#usuarios"></use></svg><span>Usuarios</span></a>{% endif %}
+    </nav>
+    {% endwith %}
+    <div class="acciones-laterales">
+      <a href="{% url 'core:portal' %}"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#sitio"></use></svg><span>Ver sitio del cliente</span></a>
+      <form method="post" action="{% url 'core:salir' %}">{% csrf_token %}<button type="submit"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#salir"></use></svg><span>Cerrar sesión</span></button></form>
     </div>
-  </nav>
+    <span class="firma-lateral">MUSIC PRO COURIER</span>
+  </aside>
   {% endif %}
-  <main class="container py-4" id="contenido">
-    {% for mensaje in messages %}
-      <div class="alert {% if mensaje.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">{{ mensaje }}</div>
-    {% endfor %}
-    {% block contenido %}{% endblock %}
-  </main>
+  <div class="area-administracion">
+    <header class="cabecera-panel">
+      <div class="titulo-cabecera">
+        <svg class="icono icono-titulo" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#reportes"></use></svg>
+        <div><h1>{% block pagina_titulo %}Sistema de Transporte{% endblock %}</h1><p>{% block pagina_subtitulo %}Control de vehículos, conductores y viajes{% endblock %}</p></div>
+      </div>
+      {% if request.user.is_authenticated %}
+      <div class="controles-panel">
+        {% block controles_cabecera %}{% endblock %}
+        <div class="perfil-panel"><span class="avatar-perfil"><svg class="icono" aria-hidden="true"><use href="{% static 'core/iconos.svg' %}#conductor"></use></svg></span><span><strong>{% if es_administrador %}Administrador{% else %}Operador{% endif %}</strong><small>{{ request.user.username }}</small></span></div>
+      </div>
+      {% else %}<a class="volver-cliente" href="{% url 'core:portal' %}">Ver sitio del cliente <span aria-hidden="true">↗</span></a>{% endif %}
+    </header>
+    <main class="contenido-panel" id="contenido">
+      {% for mensaje in messages %}
+        <div class="alert {% if mensaje.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert">{{ mensaje }}</div>
+      {% endfor %}
+      {% block contenido %}{% endblock %}
+    </main>
+  </div>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

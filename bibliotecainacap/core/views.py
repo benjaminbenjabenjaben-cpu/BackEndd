@@ -1,4 +1,5 @@
 """CRUD propio, autenticación y diez consultas ORM para Transporte."""
+from collections import Counter
 from datetime import datetime, time, timedelta
 
 from django.contrib import messages
@@ -9,7 +10,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -135,10 +136,48 @@ def salir(request):
 
 @login_required
 def panel(request):
-    return mostrar(request, "panel_envios.html", {"totales": {
-        "tipos": TipoVehiculo.objects.count(), "vehiculos": Vehiculo.objects.count(),
-        "conductores": Conductor.objects.count(), "viajes": Viaje.objects.count(),
-    }})
+    periodo = request.GET.get("periodo", "30")
+    if periodo not in ("7", "30", "90"):
+        periodo = "30"
+    hoy = timezone.localdate()
+    desde = hoy - timedelta(days=int(periodo) - 1)
+    inicio_periodo = timezone.make_aware(datetime.combine(desde, time.min))
+    fin_periodo = timezone.make_aware(datetime.combine(hoy + timedelta(days=1), time.min))
+    viajes = Viaje.objects.filter(fecha_salida__gte=inicio_periodo, fecha_salida__lt=fin_periodo)
+    conteos = dict(viajes.values("estado").annotate(total=Count("id")).values_list("estado", "total"))
+    total_viajes = sum(conteos.values())
+    colores = {"finalizado": "#1677ff", "en_curso": "#20c684", "programado": "#ffca35", "cancelado": "#ff5959"}
+    estados = [
+        {"codigo": estado, "nombre": dict(Viaje.ESTADOS)[estado], "total": conteos.get(estado, 0),
+         "porcentaje": conteos.get(estado, 0) * 100 / total_viajes if total_viajes else 0, "color": color}
+        for estado, color in colores.items()
+    ]
+    por_tipo = list(TipoVehiculo.objects.annotate(total=Count(
+        "vehiculos__viajes", filter=Q(
+            vehiculos__viajes__fecha_salida__gte=inicio_periodo,
+            vehiculos__viajes__fecha_salida__lt=fin_periodo,
+        ),
+    )).values("nombre", "total").order_by("-total", "nombre"))
+    # Agrupar fechas locales en Python evita depender de tablas horarias de MySQL.
+    por_dia = Counter(timezone.localtime(fecha).date() for fecha in viajes.values_list("fecha_salida", flat=True).iterator())
+    evolucion = []
+    for numero in range(int(periodo)):
+        fecha = desde + timedelta(days=numero)
+        evolucion.append({"fecha": fecha.isoformat(), "label": fecha.strftime("%d/%m"), "total": por_dia[fecha]})
+    top_conductores = [
+        {"nombre": fila["conductor__nombre"], "total": fila["total"],
+         "participacion": fila["total"] * 100 / total_viajes if total_viajes else 0}
+        for fila in viajes.values("conductor_id", "conductor__nombre").annotate(total=Count("id"))
+        .order_by("-total", "conductor__nombre", "conductor_id")[:5]
+    ]
+    return mostrar(request, "panel_transporte.html", {
+        "periodo": periodo, "periodos": [(7, "Últimos 7 días"), (30, "Últimos 30 días"), (90, "Últimos 90 días")],
+        "totales": {"vehiculos": Vehiculo.objects.count(), "conductores": Conductor.objects.count(),
+                    "realizados": conteos.get("finalizado", 0), "programados": conteos.get("programado", 0)},
+        "estados": estados, "por_tipo": por_tipo, "evolucion": evolucion,
+        "top_conductores": top_conductores,
+        "ultimos_viajes": viajes.select_related("vehiculo", "conductor").order_by("-fecha_salida", "-id")[:5],
+    })
 
 
 @login_required

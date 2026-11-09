@@ -94,6 +94,13 @@ Se valida también que la llegada no sea anterior a la salida.
 
 ## Diez consultas ORM
 
+El panel de inicio muestra tarjetas, gráficos de estados, viajes por tipo,
+evolución diaria, conductores con más viajes y los últimos viajes. El selector
+de 7, 30 o 90 días filtra los viajes por fecha de salida, incluyendo el día actual.
+Los totales de vehículos y conductores corresponden a todos los registros.
+Administrador y Operador comparten el diseño; las operaciones de gestión
+conservan sus permisos. Los gráficos usan JavaScript y SVG locales.
+
 Se implementaron las consultas 1 a 10 del apartado Transporte del Word.
 Todas se muestran en `/reportes/` y respetan los permisos de sesión.
 
@@ -176,4 +183,6 @@ público del cliente.
 | `core/decoradores.py` | Comprobación del perfil Administrador. |
 | `core/urls.py` | Rutas del sistema propio. |
 | `core/templates/core/` | Formularios y páginas HTML. |
+| `core/templates/core/panel_transporte.html` | Panel visual compartido por Administrador y Operador. |
+| `core/static/core/panel.js` | Dibuja los gráficos SVG a partir de los datos que entrega la vista. |
 | `core/tests_e3.py` | Comprobación funcional de E3. |
