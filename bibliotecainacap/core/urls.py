@@ -3,7 +3,10 @@ from . import views
 
 app_name = "core"
 urlpatterns = [
-    path("", views.inicio, name="inicio"),
+    path("", views.rastreo, name="portal"),
+    path("rastreo/", views.rastreo, name="rastreo"),
+    path("rastreo/<str:codigo>/", views.detalle_envio, name="detalle_envio"),
+    path("ingresar/", views.inicio, name="inicio"),
     path("salir/", views.salir, name="salir"),
     path("panel/", views.panel, name="panel"),
     path("tipos/", views.tipos, name="tipos"),

@@ -1,0 +1,33 @@
+{% extends 'core/base_portal.html' %}
+{% block titulo %}{{ viaje.codigo_seguimiento }} | Music Pro Courier{% endblock %}
+{% block contenido %}
+<nav class="ruta-portal" aria-label="Ubicación"><a href="{% url 'core:rastreo' %}">Seguimiento</a><span aria-hidden="true">/</span><span>{{ viaje.codigo_seguimiento }}</span></nav>
+<section class="encabezado-seguimiento">
+  <div><div class="etiqueta-portal">CADA KILÓMETRO NOS ACERCA</div><h1>Tu pedido, paso a paso</h1><p>Código de seguimiento <strong class="codigo-seguimiento">{{ viaje.codigo_seguimiento }}</strong></p></div>
+  <span class="estado-pedido {% if cancelado %}estado-cancelado{% endif %}">{{ viaje.get_estado_display }}</span>
+</section>
+<section class="tarjeta-portal" aria-labelledby="titulo-recorrido">
+  <h2 id="titulo-recorrido">Recorrido del pedido</h2>
+  {% if cancelado %}
+    <p class="aviso-cancelacion" role="status">Este recorrido se encuentra cancelado.</p>
+  {% else %}
+    <ol class="pasos-seguimiento">
+      {% for paso in pasos %}
+      <li class="{% if paso.completo %}completo{% endif %} {% if paso.actual %}actual{% endif %}" {% if paso.actual %}aria-current="step"{% endif %}>
+        <span aria-hidden="true">{% if paso.completo %}✓{% else %}{{ forloop.counter }}{% endif %}</span><strong>{{ paso.nombre }}</strong>
+      </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+  <div class="datos-recorrido">
+    <div><span class="etiqueta-portal">ORIGEN</span><h3>{{ viaje.origen }}</h3></div>
+    <span class="flecha-recorrido" aria-hidden="true">→</span>
+    <div><span class="etiqueta-portal">DESTINO</span><h3>{{ viaje.destino }}</h3></div>
+  </div>
+  <dl class="fechas-recorrido">
+    <div><dt>Fecha de salida</dt><dd>{{ viaje.fecha_salida|date:'d/m/Y · H:i' }}</dd></div>
+    <div><dt>Fecha de llegada</dt><dd>{% if viaje.fecha_llegada %}{{ viaje.fecha_llegada|date:'d/m/Y · H:i' }}{% else %}Por registrar{% endif %}</dd></div>
+  </dl>
+</section>
+<a class="volver-rastreo" href="{% url 'core:rastreo' %}">← Consultar otro pedido</a>
+{% endblock %}

@@ -3,6 +3,8 @@
 Sistema de transporte construido con Django, formularios HTML y MySQL local.
 Las operaciones se realizan desde páginas propias: tipos de vehículo, vehículos,
 conductores, viajes, usuarios y diez reportes mediante Django ORM.
+El portal público permite al cliente consultar el estado de su pedido mediante
+el código de seguimiento del viaje, sobre la misma base de datos.
 
 ## Iniciar en esta computadora
 
@@ -13,7 +15,9 @@ Desde la carpeta principal del proyecto:
 .\venv\Scripts\python.exe bibliotecainacap\manage.py runserver 127.0.0.1:8000
 ```
 
-Abre http://127.0.0.1:8000/. Las credenciales iniciales de esta computadora están
+Abre http://127.0.0.1:8000/ para el portal del cliente y
+http://127.0.0.1:8000/ingresar/ para el acceso administrativo.
+Las credenciales iniciales de esta computadora están
 solo en `.tools/credenciales_e3.txt`, que no se publica en GitHub.
 `Ctrl+C` detiene Django. El administrador propio requiere iniciar sesión.
 
@@ -25,7 +29,8 @@ esquema entregado en el Word:
 - **TipoVehiculo:** nombre único y descripción.
 - **Vehiculo:** tipo, patente única, marca, modelo, año, disponibilidad y estado.
 - **Conductor:** RUT único, nombre, licencia, teléfono y estado activo.
-- **Viaje:** vehículo, conductor, origen, destino, salida, llegada, estado y observaciones.
+- **Viaje:** código de seguimiento único, vehículo, conductor, origen, destino,
+  salida, llegada, estado y observaciones.
 
 Un tipo puede tener varios vehículos. Cada viaje pertenece a un vehículo y a un
 conductor. `ForeignKey` representa esas relaciones; `PROTECT` impide eliminar
@@ -39,6 +44,21 @@ prefijo `core_` porque ese es el nombre de la aplicación Django.
 Se conserva el historial de migraciones ya aplicado. `0004_transporte` creó
 estas entidades y `0005_solo_transporte` retiró las tablas heredadas de Envío e
 Historial. El archivo SQLite anterior se conserva fuera de la conexión actual.
+
+`0006_seguimiento_cliente` agrega un código de seguimiento distinto a cada
+viaje existente. Los viajes nuevos reciben su código automáticamente.
+
+## Portal del cliente y administración
+
+El cliente entra a `/` o `/rastreo/` y escribe el código que le entrega la
+empresa. Ve el estado actual, el recorrido y las fechas. El seguimiento es
+público por código y no permite modificar datos ni muestra información personal
+del conductor u observaciones internas.
+
+El administrador inicia sesión en `/ingresar/` y gestiona los datos desde
+`/panel/`. En **Viajes** puede ver el código y abrir su seguimiento público.
+Al editar el estado del viaje, el cliente ve ese cambio al volver a consultar.
+Ambas páginas leen el mismo registro de MySQL; no hay otra copia en JSON.
 
 ## Sesiones y permisos
 
@@ -142,7 +162,8 @@ python manage.py test core
 Las pruebas usan una base MySQL independiente llamada `test_music_pro_e3`.
 El usuario de conexión necesita permiso para crear y borrar esa base de pruebas.
 Se comprueban sesiones, permisos, CSRF, CRUD, usuarios y los diez reportes.
-Las 19 pruebas corresponden al sistema de Transporte de esta evaluación.
+Las pruebas incluyen el sistema administrativo y su conexión con el seguimiento
+público del cliente.
 
 ## Archivos para explicar
 

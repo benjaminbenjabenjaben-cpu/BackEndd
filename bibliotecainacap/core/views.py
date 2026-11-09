@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_date, parse_datetime
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
 from .decoradores import administrador_requerido, es_administrador
 from .models import Conductor, TipoVehiculo, Vehiculo, Viaje
@@ -76,6 +76,32 @@ def fecha_formulario(valor, obligatoria=True):
 
 def fecha_html(fecha):
     return timezone.localtime(fecha).strftime("%Y-%m-%dT%H:%M") if fecha else ""
+
+
+@require_GET
+def rastreo(request):
+    codigo = request.GET.get("codigo", "").strip().upper()
+    error = ""
+    if "codigo" in request.GET:
+        viaje = Viaje.objects.filter(codigo_seguimiento=codigo).first() if len(codigo) <= 20 else None
+        if viaje:
+            return redirect("core:detalle_envio", codigo=viaje.codigo_seguimiento)
+        error = "No encontramos ese pedido. Revisa el código de seguimiento."
+    return render(request, "core/portal_cliente.html", {"codigo": codigo[:20], "error": error})
+
+
+@require_GET
+def detalle_envio(request, codigo):
+    viaje = get_object_or_404(Viaje, codigo_seguimiento=codigo.upper())
+    estados = Viaje.ESTADOS[:3]
+    posicion = next((i for i, (estado, _) in enumerate(estados) if estado == viaje.estado), -1)
+    pasos = [
+        {"nombre": nombre, "completo": i <= posicion, "actual": i == posicion}
+        for i, (_, nombre) in enumerate(estados)
+    ]
+    return render(request, "core/seguimiento_pedido.html", {
+        "viaje": viaje, "pasos": pasos, "cancelado": viaje.estado == "cancelado",
+    })
 
 
 @never_cache

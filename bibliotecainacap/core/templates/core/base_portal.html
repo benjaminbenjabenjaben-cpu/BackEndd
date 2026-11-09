@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Music Pro Courier: seguimiento de pedidos y transporte.">
+  <title>{% block titulo %}Sigue tu pedido | Music Pro Courier{% endblock %}</title>
+  <link rel="icon" href="{% static 'core/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'core/portal_cliente.css' %}">
+</head>
+<body>
+  <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
+  <header class="cabecera-portal">
+    <div class="contenedor-portal cabecera-interior">
+      <a class="marca-portal" href="/" aria-label="Music Pro Courier, inicio">
+        <span class="icono-marca" aria-hidden="true">♫</span>
+        <span>MUSIC PRO <b>COURIER</b><small>TRANSPORTE Y DESPACHOS</small></span>
+      </a>
+      <nav class="navegacion-portal" aria-label="Navegación principal">
+        <a href="{% url 'core:rastreo' %}">Rastrear pedido</a>
+        {% if request.user.is_authenticated %}
+          <a class="acceso-administrativo" href="{% url 'core:panel' %}">Volver al panel →</a>
+        {% else %}
+          <a class="acceso-administrativo" href="{% url 'core:inicio' %}">Acceso administrativo →</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main id="contenido" class="contenedor-portal" tabindex="-1">
+    {% block contenido %}{% endblock %}
+  </main>
+  <footer class="pie-portal contenedor-portal">
+    <span>© {% now 'Y' %} Music Pro Courier</span>
+    <span>Transporte y despachos</span>
+  </footer>
+</body>
+</html>

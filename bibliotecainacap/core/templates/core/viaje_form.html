@@ -2,6 +2,11 @@
 {% block contenido %}
 <section class="tarjeta formulario">
 <h1>{% if objeto.pk %}Editar{% else %}Crear{% endif %} viaje</h1>
+{% if objeto.pk %}
+<div class="alert alert-info">Código para el cliente: <strong>{{ objeto.codigo_seguimiento }}</strong>. <a href="{% url 'core:detalle_envio' objeto.codigo_seguimiento %}">Ver seguimiento público</a>.</div>
+{% else %}
+<p class="text-secondary">El código de seguimiento para el cliente se genera al guardar.</p>
+{% endif %}
 {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
 <form method="post">
   {% csrf_token %}

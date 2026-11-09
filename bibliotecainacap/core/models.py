@@ -1,5 +1,11 @@
 """Los cuatro modelos del sistema de Transporte."""
+from uuid import uuid4
+
 from django.db import models
+
+
+def generar_codigo_seguimiento():
+    return "MP-" + uuid4().hex[:16].upper()
 
 
 class TipoVehiculo(models.Model):
@@ -57,6 +63,10 @@ class Viaje(models.Model):
         ("cancelado", "Cancelado"),
     ]
 
+    codigo_seguimiento = models.CharField(
+        "código de seguimiento", max_length=20, unique=True,
+        default=generar_codigo_seguimiento, editable=False,
+    )
     vehiculo = models.ForeignKey(
         Vehiculo, on_delete=models.PROTECT, related_name="viajes",
         verbose_name="vehículo",

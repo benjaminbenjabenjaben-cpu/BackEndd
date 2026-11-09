@@ -1,0 +1,33 @@
+{% extends 'core/base_portal.html' %}
+{% block contenido %}
+<section class="presentacion-portal" aria-labelledby="titulo-portal">
+  <div class="etiqueta-portal">DE LA BODEGA AL ESCENARIO</div>
+  <h1 id="titulo-portal">La música no se detiene.<br><span>Tu logística tampoco.</span></h1>
+  <p>Tu equipo, siempre en el radar. Sigue el recorrido de tu pedido con su código de seguimiento.</p>
+</section>
+<div class="portada-columnas">
+  <section class="tarjeta-portal tarjeta-rastreo" aria-labelledby="titulo-rastreo">
+    <div class="encabezado-tarjeta">
+      <span class="icono-rastreo" aria-hidden="true">◎</span>
+      <div><h2 id="titulo-rastreo">¿Dónde está tu pedido?</h2><p>Consulta su estado y los datos del recorrido.</p></div>
+    </div>
+    <form method="get" action="{% url 'core:rastreo' %}">
+      {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+      <label class="form-label" for="codigo">Código de seguimiento</label>
+      <div class="formulario-rastreo">
+        <input class="form-control" id="codigo" name="codigo" value="{{ codigo|default:'' }}" maxlength="20" placeholder="Ingresa tu código" autocomplete="off" required>
+        <button class="btn boton-portal" type="submit">Rastrear pedido →</button>
+      </div>
+      <p class="ayuda-codigo">Utiliza el código de seguimiento entregado con tu pedido.</p>
+    </form>
+    <ol class="etapas-portada" aria-label="Etapas del transporte">
+      <li><span>01</span><strong>Programado</strong><small>Recorrido asignado</small></li>
+      <li><span>02</span><strong>En curso</strong><small>En camino a destino</small></li>
+      <li><span>03</span><strong>Finalizado</strong><small>Recorrido terminado</small></li>
+    </ol>
+  </section>
+  <aside class="imagen-portada" aria-label="Concierto de música">
+    <div><span class="etiqueta-portal">MUSIC PRO COURIER</span><p>La música se mueve.<br>Nosotros la acompañamos.</p></div>
+  </aside>
+</div>
+{% endblock %}
